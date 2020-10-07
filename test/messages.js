@@ -1,14 +1,15 @@
 
 const supertest = require('supertest')
 const app = require('../lib/app')
+const db = require('../lib/db')
 
 describe('messages', () => {
-  
+
   beforeEach( async () => {
     await db.admin.clear()
   })
-  
-  it.skip('list empty', async () => {
+
+  it('list empty', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
@@ -19,8 +20,8 @@ describe('messages', () => {
     .expect(200)
     messages.should.match([])
   })
-  
-  it.skip('list one message', async () => {
+
+  it('list one message', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
@@ -38,8 +39,8 @@ describe('messages', () => {
       content: 'Hello ECE'
     }])
   })
-  
-  it.skip('add one element', async () => {
+
+  it('add one element', async () => {
     // Create a channel
     const {body: channel} = await supertest(app)
     .post('/channels')
@@ -58,5 +59,5 @@ describe('messages', () => {
     .get(`/channels/${channel.id}/messages`)
     messages.length.should.eql(1)
   })
-  
+
 })
