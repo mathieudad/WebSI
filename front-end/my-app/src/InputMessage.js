@@ -1,29 +1,25 @@
 const React = require('react');
 
-class SendButton extends React.Component{
-    constructor(props) {
-        super(props);
+function InputMessage (props){
+    const [text, setText] = useState("Message");
+
+    function handleTextChange(event) {
+        setText(event.target.value);
     }
 
-    render(){
-        return(
-            <button onClick={this.props.handleClick}></button>
-        )
+    function handleSendMessage(){
+       
     }
+
+    return(
+        <div>
+            <button onClick={handleSendMessage}>Send</button>
+            <input onChange={handleTextChange} type="text">{text}</input>
+        </div>
+    )
+    
 }
 
-class InputMessage extends React.Component{
-    constructor(props) {
-        super(props);
-    }
-
-    render(){
-        return(
-            <div>
-                <SendButton onClick/>
-            </div>
-        )
-    }
+module.exports = {
+    InputMessage : InputMessage
 }
-
-export default InputMessage;

@@ -1,13 +1,14 @@
 const React = require('react');
+const InputMessage = require('InputMessage').InputMessage;
 
-class Frame extends React.Component{
-    constructor(props) {
-        super(props);
-    }
+function Frame () {
+    return(
+        <div>
 
-    render(){
-        return(
-            <div></div>
-        )
-    }
+        </div>
+    )
+}
+
+module.exports = {
+    Frame : Frame
 }
