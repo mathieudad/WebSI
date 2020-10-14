@@ -1,8 +1,8 @@
 const React = require('react');
 const {useState} = require('react');
 
-const InputMessage = require('./InputMessage').InputMessage;
-const Message = require('./Message').Message;
+const InputMessage = require('./InputMessage');
+const Message = require('./Message');
 
 const messi = require('./Messi.jpg');
 const thauvin = require('./Thauvin.jpg');
@@ -66,6 +66,4 @@ function Frame () {
     )
 }
 
-module.exports = {
-    Frame : Frame
-}
+module.exports = Frame;

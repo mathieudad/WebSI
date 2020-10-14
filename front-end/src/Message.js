@@ -29,6 +29,4 @@ function Message (props){
     
 }
 
-module.exports = {
-    Message : Message
-}
+module.exports = Message;

@@ -17,10 +17,12 @@ function InputMessage (props){
     return(
         <div className="input-message-container">
             <button onClick={handleSendMessage}>Send</button>
-            <input className="input-message-input-text" onChange={handleTextChange} type="text" value={text} placeholder="Message"/>
+            <input className="input-message-input-text" onChange={handleTextChange} type="text" onFocus={text} value={text} placeholder="Message"/>
         </div>
     )
     
 }
 
-module.exports = InputMessage;
+module.exports = {
+    InputMessage : InputMessage
+}
