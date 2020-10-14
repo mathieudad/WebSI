@@ -1,4 +1,5 @@
 const React = require('react');
+const {useState} = require('react');
 
 function InputMessage (props){
     const [text, setText] = useState("Message");
@@ -8,13 +9,13 @@ function InputMessage (props){
     }
 
     function handleSendMessage(){
-       
+       console.log("Send : " + text);
     }
 
     return(
-        <div>
+        <div className="input-message-container">
             <button onClick={handleSendMessage}>Send</button>
-            <input onChange={handleTextChange} type="text">{text}</input>
+            <input className="input-message-input-text" onChange={handleTextChange} type="text" placeholder={text}/>
         </div>
     )
     
