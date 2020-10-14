@@ -10,6 +10,8 @@ function InputMessage (props){
 
     function handleSendMessage(){
        console.log("Send : " + text);
+       setText("");
+       props.onSendMessage(text);
     }
 
     return(
