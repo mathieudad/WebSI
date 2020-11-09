@@ -1,5 +1,7 @@
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
+const {Duration} = require('luxon')
+const { DateTime } = require("luxon")
 
 const styles = {
 
@@ -31,12 +33,15 @@ export default ({channel, messages}) => {
           <div css={styles.messages}>
             <h1>Messages for {channel.name}</h1>
             <ul>
-              { messages.map( (message, i) => (
-                <li key={i} css={styles.message}>
+              { messages.map( (message, i) => {
+                //The date will be relative until a year ago
+                let date = DateTime.fromMillis(message.creation)
+                date = DateTime.local().year - date.year >= 1 ? date.toFormat("dd-MM-yyyy à hh:mm") : date.toRelativeCalendar()
+               return <li key={i} css={styles.message}>
                   <p>
                     <span>{message.author}</span>
                     {' '}
-                    <span>{(new Date(message.creation)).toString()}</span>
+                    <span>{date}</span>
                   </p>
                   <div>
                     {
@@ -47,7 +52,7 @@ export default ({channel, messages}) => {
                     }
                   </div>
                 </li>
-              ))}
+              })}
             </ul>
           </div>
     )
