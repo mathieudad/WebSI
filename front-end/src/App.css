@@ -1,36 +1,9 @@
-li{
-  list-style-type: none
-}
 
-.message-container{
-  display: flex;
-  flex-direction: row;
-  margin-top: 10px;
-}
+@import-normalize;
 
-.message-text-container{
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
-}
-
-.message-info-pseudo {
-  margin-right: 10px;
-  font-weight: bold; 
-}
-
-.input-message-container{
-  margin-top: 10px;
-  display: flex;
-}
-
-.input-message-input-text{
+.App {
+  color: #fff;
+  position: absolute;
+  height: 100%;
   width: 100%;
-}
-
-.frame-message{
-  padding: 6px;
-  border: solid;
-  background-color: black;
-  color: white;
 }

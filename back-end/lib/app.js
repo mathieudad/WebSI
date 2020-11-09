@@ -1,54 +1,41 @@
 
-const db = require('./db') //import de notre module db. db est un objet contenat différentes propriétés implémentées dans le module
-const express = require('express') //import de express
-const app = express() //lancement de express
+const db = require('./db')
+const express = require('express')
+const cors = require('cors')
+const app = express()
 
-app.use(require('body-parser').json()) //cette bibliothèque nous permet de parser le body de la requête sous le format JSON. N'oubliez pas d'effectuer des requetes avec le header Content-Type avec comme valeur application/json
-//Implémentation d'une route / par défaut
+app.use(require('body-parser').json())
+app.use(cors())
+
 app.get('/', (req, res) => {
   res.send([
     '<h1>ECE DevOps Chat</h1>'
   ].join(''))
 })
 
-//Lister tous les channels
+// Channels
+
 app.get('/channels', async (req, res) => {
-  const channels = await db.channels.list() //On appel la fonction list de notre module "db" qui va nous retourner tous les channels stockés en base de données
-  res.json(channels) //On renvoie du json en sortie
+  const channels = await db.channels.list()
+  res.json(channels)
 })
 
-//Créer un channel
 app.post('/channels', async (req, res) => {
   const channel = await db.channels.create(req.body)
-  res.status(201).json(channel) //petite spécificité ici, on précise le status code 201. Pour apprendre plus sur les status code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
+  res.status(201).json(channel)
 })
 
-//Syntaxe async/await : https://blog.engineering.publicissapient.fr/2017/11/14/asyncawait-une-meilleure-facon-de-faire-de-lasynchronisme-en-javascript/
-
-//Voir un channel
-app.get('/channels/:id', (req, res) => {
-  const channel = db.channels.get(req.body)
+app.get('/channels/:id', async (req, res) => {
+  const channel = await db.channels.get(req.params.id)
   res.json(channel)
 })
 
-//Modifier un channel
-app.put('/channels/:id', (req, res) => {
-  const channel = db.channels.update(req.body)
+app.put('/channels/:id', async (req, res) => {
+  const channel = await db.channels.update(req.body)
   res.json(channel)
 })
 
-//Add missing routes here...
-
-//Recuperer un utilisateur
-app.get('/users', async (req, res) => {
-  const users = await db.users.list() //On appel la fonction list de notre module "db" qui va nous retourner tous les channels stockés en base de données
-  res.json(users) //On renvoie du json en sortie
-})
-
-app.post('/users', async (req, res) => {
-  const user = await db.users.create(req.body)
-  res.status(201).json(user) //petite spécificité ici, on précise le status code 201. Pour apprendre plus sur les status code : https://fr.wikipedia.org/wiki/Liste_des_codes_HTTP
-})
+// Messages
 
 app.get('/channels/:id/messages', async (req, res) => {
   const messages = await db.messages.list(req.params.id)
@@ -56,9 +43,30 @@ app.get('/channels/:id/messages', async (req, res) => {
 })
 
 app.post('/channels/:id/messages', async (req, res) => {
-  const message = await db.messages.create(req.body.content,  req.params.id)
+  const message = await db.messages.create(req.params.id, req.body)
   res.status(201).json(message)
+})
 
+// Users
+
+app.get('/users', async (req, res) => {
+  const users = await db.users.list()
+  res.json(users)
+})
+
+app.post('/users', async (req, res) => {
+  const user = await db.users.create(req.body)
+  res.status(201).json(user)
+})
+
+app.get('/users/:id', async (req, res) => {
+  const user = await db.users.get(req.params.id)
+  res.json(user)
+})
+
+app.put('/users/:id', async (req, res) => {
+  const user = await db.users.update(req.body)
+  res.json(user)
 })
 
 module.exports = app
