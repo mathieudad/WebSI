@@ -2,4 +2,4 @@
 
 This repository is dedicated to a school use for ECE Paris.
 
-More specific README file are present in the folder "front-end" and "back-end".
+More specific README files are present in the folders "front-end" and "back-end".
