@@ -5,7 +5,7 @@ import { jsx } from '@emotion/core'
 // Local
 import Footer from './Footer'
 import Header from './Header'
-import Main from './Main'
+import Drawer from './Drawer'
 import Login from './Login'
 import theme from './theme'
 //material-ui
@@ -25,13 +25,11 @@ export default () => {
   const [user, setUser] = useState(null)
   return (
     <div className="App" css={styles.root}>
-      <ThemeProvider theme = {theme}>
         <Header />
         {
-          user ? <Main /> : <Login onUser={setUser}/>
+          user ? <Drawer /> : <Login onUser={setUser}/>
         }
         <Footer />
-      </ThemeProvider>
     </div>
   );
 }

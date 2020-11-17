@@ -6,13 +6,13 @@ import Channels from './Channels'
 import Channel from './Channel'
 import Welcome from './Welcome'
 
+
 const styles = {
   main: {
     backgroundColor: '#373B44',
     overflow: 'hidden',
     flex: '1 1 auto',
-    display: 'flex',
-    flexDirection: 'row',
+    height : '100%'
   },
 }
 
@@ -22,9 +22,9 @@ export default () => {
     setChannel(channel)
   }
   return (
-    <main css={styles.main}>
-      <Channels onChannel={fetchChannel} />
-      {channel ? <Channel channel={channel} messages={[]} /> : <Welcome />}
-    </main>
+      <main css={styles.main}>
+        <Channels onChannel={fetchChannel} />
+        {channel ? <Channel channel={channel} messages={[]} /> : <Welcome />}
+      </main>
   );
 }

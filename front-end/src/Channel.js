@@ -79,7 +79,6 @@ export default ({
         css={[styles.fab, scrollDown || styles.fabDisabled]}
         onClick={onClickScroll}
       >
-        <ArrowDropDownIcon />
       </Fab>
     </div>
   );
