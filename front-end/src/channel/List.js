@@ -1,8 +1,6 @@
 import {forwardRef, useImperativeHandle, useLayoutEffect, useRef} from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles';
 // Markdown
 import unified from 'unified'
 import markdown from 'remark-parse'
@@ -12,6 +10,8 @@ import html from 'rehype-stringify'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import updateLocale from 'dayjs/plugin/updateLocale'
+
+
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', {
@@ -20,11 +20,12 @@ dayjs.updateLocale('en', {
   }
 })
 
-const useStyles = (theme) => ({
+const styles = {
   root: {
     position: 'relative',
     flex: '1 1 auto',
     overflow: 'auto',
+    color: 'black',
     '& ul': {
       'margin': 0,
       'padding': 0,
@@ -49,14 +50,13 @@ const useStyles = (theme) => ({
     top: 0,
     width: '50px',
   },
-})
+}
 
 export default forwardRef(({
   channel,
   messages,
   onScrollDown,
 }, ref) => {
-  const styles = useStyles(useTheme())
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
     scroll: scroll
@@ -95,11 +95,11 @@ export default forwardRef(({
             .processSync(message.content)
             return (
               <li key={i} css={styles.message}>
-                <p>
-                  <span>{message.author}</span>
+                <h3>
+                  {message.author}
                   {' - '}
-                  <span>{dayjs().calendar(message.creation)}</span>
-                </p>
+                  {dayjs().calendar(message.creation)}
+                </h3>
                 <div dangerouslySetInnerHTML={{__html: content}}>
                 </div>
               </li>

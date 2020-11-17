@@ -17,8 +17,8 @@ const styles = {
 export default () => {
   return (
     <footer style={styles.footer}>
-      <Typography color="background" component="h5" variant="h6">
-      ©Copyright All rigth reserved
+      <Typography color="textSecondary" component="h5" variant="h6">
+        ©Copyright All rigth reserved
       </Typography>
     </footer>
   );

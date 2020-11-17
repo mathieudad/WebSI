@@ -24,8 +24,8 @@ const styles = {
 export default () => {
   return (
     <header css={styles.header}>
-      <Typography color="background" component="h3" variant="h5">
-          
+      <Typography color="textSecondary" component="h3" variant="h5">
+          ECE Messenger
       </Typography>
     </header>
   );

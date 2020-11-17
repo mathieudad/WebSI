@@ -3,12 +3,12 @@ import axios from 'axios';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
-import { useTheme } from '@material-ui/core/styles';
 import Fab from '@material-ui/core/Fab';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 // Local
 import Form from './channel/Form'
 import List from './channel/List'
+import theme from './theme'
 
 const useStyles = (theme) => ({
   root: {
@@ -16,12 +16,11 @@ const useStyles = (theme) => ({
     flex: '1 1 auto',
     display: 'flex',
     flexDirection: 'column',
-    background: 'rgba(0,0,0,.2)',
-    position: 'relative',
+    background: theme.palette.background.default,
+    position: 'relative'
   },
   fab: {
     position: 'absolute !important',
-    // position: 'fixed !important',
     top: theme.spacing(2),
     // width: '50px',
     // bottom: '0',
@@ -31,16 +30,21 @@ const useStyles = (theme) => ({
   },
   fabDisabled: {
     display: 'none !important',
+  },
+  icon: {
+    width: '30%',
+    fill: '#fff',
   }
 })
 
-export default ({
-  channel
-}) => {
-  const styles = useStyles(useTheme())
-  const listRef = useRef();
-  const channelId = useRef()
-  const [messages, setMessages] = useState([])
+export default ({channel}) => {
+  const styles = useStyles(theme)
+  const listRef = useRef({
+    id: 0,
+    username: 'user_1'
+  });
+  const channelId = useRef(1)
+  const [messages, setMessages] = useState([{autor: "Mathieu", creation:123456789, content: "Hello world !"}])
   const [scrollDown, setScrollDown] = useState(false)
   const addMessage = (message) => {
     fetchMessages()
@@ -50,7 +54,7 @@ export default ({
     const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`)
     setMessages(messages)
     if(listRef.current){
-      listRef.current.scroll()
+      //listRef.current.scroll()
     }
   }
   
@@ -79,6 +83,7 @@ export default ({
         css={[styles.fab, scrollDown || styles.fabDisabled]}
         onClick={onClickScroll}
       >
+      <ArrowDownwardIcon css={styles.icon} />
       </Fab>
     </div>
   );
