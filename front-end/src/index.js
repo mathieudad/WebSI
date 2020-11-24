@@ -5,8 +5,13 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'typeface-roboto'
 // Layout
-import {ThemeProvider} from '@material-ui/core/styles';
-import theme from './theme'
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
+const theme = createMuiTheme({
+  palette: {
+    type: 'dark',
+  }
+});
 
 ReactDOM.render(
   <React.StrictMode>

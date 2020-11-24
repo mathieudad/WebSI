@@ -40,7 +40,7 @@ export default ({
       `http://localhost:3001/channels/${channel.id}/messages`
     , {
       content: content,
-      author: 'Mathieu',
+      author: 'david',
     })
     addMessage(message)
     setContent('')

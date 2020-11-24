@@ -1,17 +1,16 @@
 import './App.css';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
+// Layout
+import { useTheme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
 
-import theme from "./theme"
-import {Typography} from '@material-ui/core'
-
-const styles = {
+const useStyles = (theme) => ({
   header: {
-    height: '60px',
-    backgroundColor: theme.palette.primary.main,
+    padding: theme.spacing(1),
+    backgroundColor: 'rgba(255,255,255,.3)',
     flexShrink: 0,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
   },
   headerLogIn: {
     backgroundColor: 'red',
@@ -19,14 +18,31 @@ const styles = {
   headerLogOut: {
     backgroundColor: 'blue',
   },
-}
+  menu: {
+    [theme.breakpoints.up('sm')]: {
+      display: 'none !important',
+    },
+  }
+})
 
-export default () => {
+export default ({
+  drawerToggleListener
+}) => {
+  const styles = useStyles(useTheme())
+  const handleDrawerToggle = (e) => {
+    drawerToggleListener()
+  }
   return (
     <header css={styles.header}>
-      <Typography color="textSecondary" component="h3" variant="h5">
-          ECE Messenger
-      </Typography>
+      <IconButton
+        color="inherit"
+        aria-label="open drawer"
+        onClick={handleDrawerToggle}
+        css={styles.menu}
+      >
+        <MenuIcon />
+      </IconButton>
+      Header
     </header>
   );
 }

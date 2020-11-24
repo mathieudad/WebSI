@@ -6,18 +6,19 @@ import { jsx } from '@emotion/core'
 import Link from '@material-ui/core/Link'
 
 const styles = {
-  root: {
-    minWidth: '200px',
-  },
+  // root: {
+  //   minWidth: '200px',
+  // },
   channel: {
     padding: '.2rem .5rem',
     whiteSpace: 'nowrap', 
   }
 }
 
-export default (props) => {
-  const {onChannel} = props
-  const [channels, setChannels] = useState([{name: "Channel 1"}, {name: "Channel 2"}, {name: "Channel 3"}])
+export default ({
+  onChannel
+}) => {
+  const [channels, setChannels] = useState([])
   useEffect( () => {
     const fetch = async () => {
       const {data: channels} = await axios.get('http://localhost:3001/channels')

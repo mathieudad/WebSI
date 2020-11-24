@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
 
 app.get('/channels', async (req, res) => {
   const channels = await db.channels.list()
-  res.json([{name: "Channel 1"}, {name: "Channel 2"}, {name: "Channel 3"}])
+  res.json(channels)
 })
 
 app.post('/channels', async (req, res) => {
