@@ -1,7 +1,5 @@
 import {useState} from 'react'
-import './App.css'
-import axios from 'axios'
-import qs from 'qs'
+import './App.css';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Local
@@ -26,26 +24,11 @@ export default () => {
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)
   }
-  const handleLogin = async ({
-    params: { client_id, client_secret, refresh_token, token_endpoint },
-    stdout,
-    stderr
-  }) => {
-    const {data} = await axios.post(token_endpoint,qs.stringify('refresh_token', client_id, client_secret, refresh_token))
-                            .then(() => {
-                                stdout.write(JSON.stringify(data, null, 2))
-                                stdout.write('\n\n')
-                              })
-                              .catch( (err) => {
-                                stderr.write(JSON.stringify(err.response.data, null, 2))
-                                stderr.write('\n\n')
-                              })  
-  }
   return (
     <div className="App" css={styles.root}>
       <Header drawerToggleListener={drawerToggleListener}/>
       {
-        user ? <Main drawerMobileVisible={drawerMobileVisible} /> : <Login onUser={handleLogin} />
+        user ? <Main drawerMobileVisible={drawerMobileVisible} /> : <Login onUser={setUser} />
       }
       <Footer />
     </div>
