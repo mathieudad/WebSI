@@ -6,14 +6,14 @@ More specific README files are present in the folders "front-end" and "back-end"
 
 ## Instalation 
 
-Run 'npm install' in folder back-end and front-end. 
+Run `npm install` in folder back-end and front-end. 
 
 ## Starting the app
 
 ### MacOS and Linux
 If you are on MacOS or Linux, just run the two following commands : 
-1. 'chmod +x launcher'
-2. './launcher'
+1. `chmod +x launcher`
+2. `./launcher`
 
 It will automaticly start front-end, back-end and dex server
 
