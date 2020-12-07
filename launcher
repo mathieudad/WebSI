@@ -1,0 +1,8 @@
+#!/bin/bash
+
+start_dex() { 
+  cd dex-server;
+  ./bin/dex serve ./examples/config-dev.yaml;
+}
+
+npm start --prefix ./back-end & npm start --prefix ./front-end & start_dex
