@@ -41,6 +41,7 @@
     "reset": "bin/reset",
     "develop": "bin/init && bin/start",
     "start": "bin/start",
+    "startp": "node bin/start",
     "test": "mocha 'test/**/*.js'"
   }
 }

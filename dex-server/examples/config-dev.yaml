@@ -93,10 +93,10 @@ telemetry:
 #
 # If this option isn't chosen clients may be added through the gRPC API.
 staticClients:
-- id: example-app
+- id: webtech-frontend
   redirectURIs:
-  - 'http://127.0.0.1:3000'
-  name: 'Example App'
+  - 'http://localhost:3000'
+  name: 'webtech frontend'
  #secret: ZXhhbXBsZS1hcHAtc2VjcmV0
 #  - id: example-device-client
 #    redirectURIs:
