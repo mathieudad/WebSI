@@ -2,6 +2,7 @@
 
 start_dex() { 
   cd dex-server;
+  make;
   ./bin/dex serve ./examples/config-dev.yaml;
 }
 
