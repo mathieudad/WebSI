@@ -4,3 +4,5 @@ back-end/db
 
 front-end/node_modules/
 front-end/package-lock.json
+
+dex-server/bin/
