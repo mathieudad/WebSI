@@ -28,9 +28,9 @@ module.exports = ({jwks_uri} = {}) => {
       res.status(401).send('Authorization Not Bearer')
       return
     }
-    const key = await fetchKeyFromOpenIDServer(jwks_uri, access_token)
-    // Validate the payload
     try{
+      const key = await fetchKeyFromOpenIDServer(jwks_uri, access_token)
+      // Validate the payload
       const payload = jwt.verify(access_token, key)
       req.user = payload
       next()
