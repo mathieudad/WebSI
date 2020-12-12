@@ -7,16 +7,12 @@ import { Provider as ContextProvider } from './Context';
 import * as serviceWorker from './serviceWorker';
 import 'typeface-roboto'
 // Layout
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+import {ThemeProvider } from '@material-ui/core/styles';
+import {theme} from './Theme'
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
-const theme = createMuiTheme({
-  palette: {
-    type: 'dark',
-  }
-});
 
 ReactDOM.render(
   <React.StrictMode>

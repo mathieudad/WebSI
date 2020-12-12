@@ -17,7 +17,7 @@ import {
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: '#373B44',
+    backgroundColor:  theme.palette.secondary.main,
     overflow: 'hidden',
     flex: '1 1 auto',
     display: 'flex',
@@ -25,17 +25,19 @@ const useStyles = (theme) => ({
     position: 'relative',
   },
   drawer: {
+    backgroundColor : theme.palette.secondary.main,
     width: '200px',
     display: 'none',
   },
   drawerVisible: {
+    backgroundColor : theme.palette.secondary.main,
     display: 'block',
   },
 })
 
 export default () => {
   const {
-    currentChannel,
+    //currentChannel,
     drawerVisible,
   } = useContext(Context)
   const theme = useTheme()

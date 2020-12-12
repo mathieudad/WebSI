@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
-import qs from 'qs'
-import axios from 'axios'
+import qs from 'qs';
+import axios from 'axios';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
@@ -31,7 +31,7 @@ const sha256 = (buffer) => {
 const useStyles = (theme) => ({
   root: {
     flex: '1 1 auto',
-    background: theme.palette.background.default,
+    background: theme.palette.secondary.dark,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
