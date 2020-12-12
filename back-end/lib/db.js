@@ -92,6 +92,21 @@ module.exports = {
       const user = JSON.parse(data)
       return merge(user, {id: id})
     },
+    addChannel: async (email, idChannel, isAdmin) => {
+      let userChannels = await db.get(`users:${email}`)
+      if(isAdmin){
+        if(!userChannels.owned){
+          userChannels.owned = []
+        }
+        userChannels.owned = [...userChannels.owned, `channels:${idChannel}`]
+      }else{
+        if(!userChannels.guest){
+          userChannels.guest = []
+        }
+        userChannels.guest = [...userChannels.guest, `channels:${idChannel}`]
+      }
+      await db.put(`users:${email}`, JSON.stringify(userChannels))
+    },
     list: async () => {
       return new Promise( (resolve, reject) => {
         const users = []
