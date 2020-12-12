@@ -12,7 +12,7 @@ import Context from './Context'
 const useStyles = (theme) => ({
   header: {
     padding: theme.spacing(1),
-    backgroundColor: 'rgba(255,255,255,.3)',
+    backgroundColor: theme.palette.secondary.light,
     flexShrink: 0,
   },
   headerLogIn: {

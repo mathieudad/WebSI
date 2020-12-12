@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useState} from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Local
@@ -16,19 +16,23 @@ import {
   useLocation
 } from "react-router-dom"
 
-const styles = {
+import {useTheme} from '@material-ui/core/styles';
+
+const useStyles = (theme) => ({
   root: {
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: '#565E71',
+    backgroundColor: '#FFFFFF',
     padding: '50px',
   },
-}
+})
 
 export default () => {
   const location = useLocation()
   const {oauth} = useContext(Context)
+  const theme = useTheme()
+  const styles = useStyles(theme)
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false)
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)

@@ -1,22 +1,25 @@
 import {useContext, useEffect} from 'react';
+
 import axios from 'axios';
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
 import Link from '@material-ui/core/Link'
+import { useTheme } from '@material-ui/core/styles';
 // Local
 import Context from './Context'
 import {useHistory} from 'react-router-dom'
 
-const styles = {
-  // root: {
-  //   minWidth: '200px',
-  // },
+const useStyles = (theme) => ({
+ root: {
+    backgroundColor : theme.palette.primary.dark,
+    minWidth: '200px',
+  },
   channel: {
     padding: '.2rem .5rem',
     whiteSpace: 'nowrap', 
   }
-}
+})
 
 export default () => {
   const {
@@ -24,6 +27,7 @@ export default () => {
     channels, setChannels
   } = useContext(Context)
   const history = useHistory();
+  const styles = useStyles(useTheme())
   useEffect( () => {
     const fetch = async () => {
       try{
@@ -40,7 +44,7 @@ export default () => {
     fetch()
   }, [oauth, setChannels])
   return (
-    <ul style={styles.root}>
+    <ul css={styles.root}>
       { channels.map( (channel, i) => (
         <li key={i} css={styles.channel}>
           <Link
