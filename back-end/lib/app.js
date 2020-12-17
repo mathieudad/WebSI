@@ -55,13 +55,13 @@ app.post('/channels/:id/messages', async (req, res) => {
 
 // Users
 
-app.get('/users', async (req, res) => {
+app.get('/users', authenticate,async (req, res) => {
   const users = await db.users.list()
   res.json(users)
 })
 
-app.post('/users', async (req, res) => {
-  const user = await db.users.create(req.body)
+app.post('/users', authenticate, async (req, res) => {
+  const user = await db.users.create(req.body, req.user.email)
   res.status(201).json(user)
 })
 
@@ -70,8 +70,20 @@ app.get('/users/:id', async (req, res) => {
   res.json(user)
 })
 
+app.get('/users/:id/channels',  authenticate, async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  if(id != req.user.email) throw Error('Unauthorized')
+  const userChannels = await db.users.listChannels(id)
+  res.json(userChannels)
+})
+
 app.put('/users/:id', async (req, res) => {
   const user = await db.users.update(req.body)
+  res.json(user)
+})
+
+app.get('/users/:userName/exists', async (req, res) => {
+  const user = await db.users.getByName(req.params.id)
   res.json(user)
 })
 
