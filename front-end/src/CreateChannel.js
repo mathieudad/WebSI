@@ -79,13 +79,13 @@ export default({open,onClose}) => {
   const addMember = async () => {
       if(!member) return
       try{
-        const exist = await axios.get(`http://localhost:3001/users/${member}/exists`, {
+        const {data : email} = await axios.get(`http://localhost:3001/users/byname/${member}`, {
           headers: {
-           'Authorization': `Bearer ${oauth.codeVerifier}`
+           'Authorization': `Bearer ${oauth.access_token}`
           }
-        })
-        if(exist){
-          setMembers([...members, member])
+        })     
+        if(email){
+          setMembers([...members, email])
           setMember('')
         }
         else{
