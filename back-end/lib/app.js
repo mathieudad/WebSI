@@ -66,9 +66,11 @@ app.post('/users', authenticate, async (req, res) => {
 })
 
 app.get('/users/:id', async (req, res) => {
-  const user = await db.users.get(req.params.id)
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const user = await db.users.get(id)
   res.json(user)
 })
+
 
 app.get('/users/:id/channels',  authenticate, async (req, res) => {
   const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
