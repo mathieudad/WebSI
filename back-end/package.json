@@ -18,7 +18,8 @@
     "uuid": "^8.3.0"
   },
   "devDependencies": {
-    "mocha": "^8.1.3"
+    "mocha": "^8.1.3",
+    "nodemon": "^2.0.6"
   },
   "keywords": [
     "tech",
@@ -42,6 +43,7 @@
     "develop": "bin/init && bin/start",
     "start": "bin/start",
     "startp": "node bin/start",
-    "test": "mocha 'test/**/*.js'"
+    "test": "mocha 'test/**/*.js'",
+    "demon": "nodemon bin/start"
   }
 }

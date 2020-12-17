@@ -50,7 +50,7 @@ module.exports = {
   messages: {
     create: async (channelId, message) => {
       if(!channelId) throw Error('Invalid channel')
-      if(!message.author) throw Error('Invalid message')
+      if(!message.author) throw Error('Invalid author')
       if(!message.content) throw Error('Invalid message')
       creation = microtime.now()
       await db.put(`messages:${channelId}:${creation}`, JSON.stringify({
@@ -80,17 +80,53 @@ module.exports = {
     },
   },
   users: {
-    create: async (user) => {
-      if(!user.username) throw Error('Invalid user')
-      const id = uuid()
-      await db.put(`users:${id}`, JSON.stringify(user))
-      return merge(user, {id: id})
+    create: async (user, email) => {
+      if(!user.name) throw Error('Invalid user')
+      if(!email) throw Error('Invalid email')
+      await db.put(`users:${email}`, JSON.stringify(user))
+      await db.put(`userchannels:${email}`, JSON.stringify({owned: [], guest: []}))
+      await db.put(`usernames:${user.name}`, email)
+      return merge(user, {email: email})
     },
     get: async (id) => {
       if(!id) throw Error('Invalid id')
+      try{
+        const data = await db.get(`users:${id}`)
+        const user = JSON.parse(data)
+        return merge(user, {id: id})
+      }catch (err){
+        //TODO Check error type
+        return null
+      }
+    },
+    getByName: async (userName) => {
+      if(!userName) throw Error('Invalid id')
       const data = await db.get(`users:${id}`)
       const user = JSON.parse(data)
       return merge(user, {id: id})
+    },
+    addChannel: async (id, idChannel, isAdmin) => {
+      if(!id || !idChannel) throw Error('Invalid id')
+      const data = await db.get(`userchannels:${id}`)
+      let userChannels = JSON.parse(data)
+      if(isAdmin){
+        if(!userChannels.owned){
+          userChannels.owned = []
+        }
+        userChannels.owned = [...userChannels.owned, `channels:${idChannel}`]
+      }else{
+        if(!userChannels.guest){
+          userChannels.guest = []
+        }
+        userChannels.guest = [...userChannels.guest, `channels:${idChannel}`]
+      }
+      await db.put(`userchannels:${id}`, JSON.stringify(userChannels))
+    },
+    listChannels: async (id) => {
+      if(!id) throw Error('Invalid id')
+      const data = await db.get(`userchannels:${id}`)
+      const userChannels = JSON.parse(data)
+      return userChannels
     },
     list: async () => {
       return new Promise( (resolve, reject) => {
