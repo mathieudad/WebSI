@@ -83,8 +83,8 @@ app.put('/users/:id', async (req, res) => {
   res.json(user)
 })
 
-app.get('/users/:userName/exists', async (req, res) => {
-  const user = await db.users.getByName(req.params.id)
+app.get('/users/byname/:userName', async (req, res) => {
+  const user = await db.users.getByName(req.params.userName)
   res.json(user)
 })
 
