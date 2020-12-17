@@ -101,9 +101,13 @@ module.exports = {
     },
     getByName: async (userName) => {
       if(!userName) throw Error('Invalid id')
-      const data = await db.get(`users:${id}`)
-      const user = JSON.parse(data)
-      return merge(user, {id: id})
+      try{
+        const email = await db.get(`usernames:${userName}`)
+        return email
+      } catch(err) {
+        //TODO Check error type
+        return null
+      }
     },
     addChannel: async (id, idChannel, isAdmin) => {
       if(!id || !idChannel) throw Error('Invalid id')

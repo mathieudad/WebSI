@@ -11,6 +11,7 @@ const authenticate = authenticator({
 
 app.use(require('body-parser').json())
 app.use(cors())
+app.use(authenticate)
 
 app.get('/', (req, res) => {
   res.send([
@@ -20,12 +21,12 @@ app.get('/', (req, res) => {
 
 // Channels
 
-app.get('/channels', authenticate, async (req, res) => {
+app.get('/channels', async (req, res) => {
   const channels = await db.channels.list()
   res.json(channels)
 })
 
-app.post('/channels', authenticate, async (req, res) => {
+app.post('/channels', async (req, res) => {
   const channel = await db.channels.create(req.body)
   await db.users.addChannel(req.user.email, channel.id, true)
   res.status(201).json(channel)
@@ -55,12 +56,12 @@ app.post('/channels/:id/messages', async (req, res) => {
 
 // Users
 
-app.get('/users', authenticate,async (req, res) => {
+app.get('/users', async (req, res) => {
   const users = await db.users.list()
   res.json(users)
 })
 
-app.post('/users', authenticate, async (req, res) => {
+app.post('/users', async (req, res) => {
   const user = await db.users.create(req.body, req.user.email)
   res.status(201).json(user)
 })
@@ -71,7 +72,7 @@ app.get('/users/:id', async (req, res) => {
   res.json(user)
 })
 
-app.get('/users/:id/channels',  authenticate, async (req, res) => {
+app.get('/users/:id/channels', async (req, res) => {
   const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
   if(id != req.user.email) throw Error('Unauthorized')
   const userChannels = await db.users.listChannels(id)
@@ -83,8 +84,8 @@ app.put('/users/:id', async (req, res) => {
   res.json(user)
 })
 
-app.get('/users/:userName/exists', async (req, res) => {
-  const user = await db.users.getByName(req.params.id)
+app.get('/users/byname/:userName', async (req, res) => {
+  const user = await db.users.getByName(req.params.userName)
   res.json(user)
 })
 
