@@ -186,7 +186,6 @@ export default({open,onClose}) => {
           margin="normal"
           fullWidth
           onChange = {handleChangeNameChannel}
-
         />
           <Members members={members}/>
           <div css={style.member}>

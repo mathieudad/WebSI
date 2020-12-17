@@ -8,6 +8,7 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
+import UsernameForm from './UsernameForm'
 // Rooter
 import {
   Switch,
@@ -44,12 +45,16 @@ export default () => {
         <Route exact path="/">
           {
             oauth ? (
-              <Redirect
+              oauth.user ? 
+              (<Redirect
+
                 to={{
                   pathname: "/channels",
                   state: { from: location }
                 }}
-              />
+              />) : (
+              <UsernameForm/>
+              )
             ) : (
               <Login />
             )
@@ -57,7 +62,7 @@ export default () => {
         </Route>
         <Route path="/channels">
           {
-            oauth ? (
+            oauth && oauth.user ? (
               <Main />
             ) : (
               <Redirect

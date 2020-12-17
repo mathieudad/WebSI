@@ -46,7 +46,7 @@ export default () => {
     setOpen(false);
   }
 
-  const propsChannel = {
+  const propsChannelButton = {
     variant:"contained",
     color:"primary",
     onClick: handleClickOpen
@@ -62,7 +62,7 @@ export default () => {
         <Grid item xs>
           <div css={styles.card}>
             <ChannelIcon css={styles.icon} />
-       <ResponsiveButton name = {'Create a Channel'} props = {propsChannel} icon={<AddIcon/>}/>
+       <ResponsiveButton name = {'Create a Channel'} props = {propsChannelButton} icon={<AddIcon/>}/>
       <CreateChannel open={open} onClose= {handleClose} aria-labelledby="form-dialog-title"/>
           </div>
         </Grid>

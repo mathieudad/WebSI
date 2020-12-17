@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect} from 'react';
 import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
 import qs from 'qs';
@@ -95,11 +95,10 @@ const Tokens = ({
   )
 }
 
-export default ({
-  onUser
-}) => {
+
+export default () => {
   const styles = useStyles(useTheme())
-  const history = useHistory();
+  const history = useHistory()
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
   const {oauth, setOauth} = useContext(Context)
@@ -141,6 +140,11 @@ export default ({
           }))
           removeCookie('code_verifier')
           setOauth(data)
+          const email64 = base64URLEncode(oauth.email)
+          const user = await axios.get(`http://127.0.0.1:3000/users/${email64}`)
+          if(user){
+            oauth.user = user
+          }
           // window.location = '/'
           history.push('/')
         }catch (err) {
