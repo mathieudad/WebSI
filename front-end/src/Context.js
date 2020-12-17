@@ -19,12 +19,6 @@ export const Provider = ({
       oauth: oauth,
       setOauth: (oauth) => {
         if(oauth){
-          const payload = JSON.parse(
-            Buffer.from(
-              oauth.id_token.split('.')[1], 'base64'
-            ).toString('utf-8')
-          )
-          oauth.email = payload.email
           setCookie('oauth', oauth)
         }else{
           setCurrentChannel(null)

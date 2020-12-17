@@ -139,12 +139,20 @@ export default () => {
             code: `${code}`,
           }))
           removeCookie('code_verifier')
-          setOauth(data)
-          const email64 = base64URLEncode(oauth.email)
-          const user = await axios.get(`http://127.0.0.1:3000/users/${email64}`)
+          const email = JSON.parse(
+            Buffer.from(
+              data.id_token.split('.')[1], 'base64'
+            ).toString('utf-8')
+          ).email
+          data.email = email
+          const email64 = window.btoa(email)
+          console.log(email64)
+          const res = await axios.get(`http://localhost:3001/users/${email64}`)
+          const user = res.data
           if(user){
-            oauth.user = user
+            data.user = user
           }
+          setOauth(data)
           // window.location = '/'
           history.push('/')
         }catch (err) {

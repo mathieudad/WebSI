@@ -60,14 +60,6 @@ const DiagMessage = ({diagMess})=> {
 return(<DialogContentText style={{width: "85%"}}>{diagMess}</DialogContentText>)
 }
 
-
-const base64URLEncode = (str) => {
-  return str.toString('base64')
-    .replace(/\+/g, '-')
-    .replace(/\//g, '_')
-    .replace(/=/g, '');
-}
-
 export default({open,onClose}) => {
   const {oauth} = useContext(Context)
   const [member, setMember] = useState('')
@@ -87,14 +79,13 @@ export default({open,onClose}) => {
   const addMember = async () => {
       if(!member) return
       try{
-        const member64 = base64URLEncode(member)
-        const exist = await axios.get(`http://127.0.0.1:3000/users/${member64}/exists`, {
+        const exist = await axios.get(`http://localhost:3001/users/${member}/exists`, {
           headers: {
            'Authorization': `Bearer ${oauth.codeVerifier}`
           }
         })
         if(exist){
-          setMembers([...members, member64])
+          setMembers([...members, member])
           setMember('')
         }
         else{
@@ -127,10 +118,10 @@ export default({open,onClose}) => {
       let channel = {
       name : nameChannel,
       members : JSON.stringify(members)}
-      await axios.post('http://127.0.0.1:3000/channels',channel,{
+      await axios.post('http://localhost:3001/channels',channel,{
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${oauth.codeVerifier}`
+        'Authorization': `Bearer ${oauth.access_token}`
        }})
 
        setDiagMess('Please enter the name of the channel and participants you want to chat with.')

@@ -23,7 +23,7 @@ import axios from 'axios';
   export default ()=>{
     const history = useHistory()
       const styles = useStyles(useTheme())
-      const {oauth} = useContext(Context)    
+      const {oauth,setOauth} = useContext(Context)    
       const [username, setUserName] = useState('')
       const [message, setMessage] = useState('please enter the username you want to use (you can change it later)')
     
@@ -40,12 +40,14 @@ import axios from 'axios';
             const data = {
               name : username
             }
-            const user = await axios.post('http://127.0.0.1:3000/users', data, {
+            const user = await axios.post('http://localhost:3001/users', data, {
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${oauth.codeVerifier}`
+                'Authorization': `Bearer ${oauth.access_token}`
                }})
-            oauth.user = user
+            
+            oauth.user = user.data
+            setOauth(oauth)
             history.push('/')
           }catch(err){
             setMessage('Oops an error occur try again..')
