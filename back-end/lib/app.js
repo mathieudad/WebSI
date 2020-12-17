@@ -71,7 +71,6 @@ app.get('/users/:id', async (req, res) => {
   res.json(user)
 })
 
-
 app.get('/users/:id/channels',  authenticate, async (req, res) => {
   const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
   if(id != req.user.email) throw Error('Unauthorized')
