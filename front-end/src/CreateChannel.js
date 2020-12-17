@@ -88,7 +88,7 @@ export default({open,onClose}) => {
       if(!member) return
       try{
         const member64 = base64URLEncode(member)
-        const exist = await axios.get(`http://127.0.0.1:3000/channel/${member64}`, {
+        const exist = await axios.get(`http://127.0.0.1:3000/users/${member64}/exists`, {
           headers: {
            'Authorization': `Bearer ${oauth.codeVerifier}`
           }
@@ -127,7 +127,7 @@ export default({open,onClose}) => {
       let channel = {
       name : nameChannel,
       members : JSON.stringify(members)}
-      await axios.post('http://127.0.0.1:3000/channel/',channel,{
+      await axios.post('http://127.0.0.1:3000/channels',channel,{
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${oauth.codeVerifier}`
