@@ -7,11 +7,12 @@ const db = level(__dirname + '/../db')
 
 module.exports = {
   channels: {
-    create: async (channel) => {
+    create: async (channel, idOwner) => {
       if(!channel.name) throw Error('Invalid channel')
+      if(!idOwner) throw Error('Invalid owner id')
       const id = uuid()
-      await db.put(`channels:${id}`, JSON.stringify(channel))
-      return merge(channel, {id: id})
+      await db.put(`channels:${id}`, JSON.stringify(merge(channel, {owner: idOwner})))
+      return merge(channel, {id: id, owner: idOwner})
     },
     get: async (id) => {
       if(!id) throw Error('Invalid id')
@@ -109,7 +110,7 @@ module.exports = {
         return null
       }
     },
-    addChannel: async (id, idChannel, isAdmin) => {
+    addChannel: async (id, idChannel, isAdmin = false) => {
       if(!id || !idChannel) throw Error('Invalid id')
       const data = await db.get(`userchannels:${id}`)
       let userChannels = JSON.parse(data)
@@ -124,7 +125,7 @@ module.exports = {
         }
         userChannels.guest = [...userChannels.guest, `channels:${idChannel}`]
       }
-      await db.put(`userchannels:${id}`, JSON.stringify(userChannels))
+      return db.put(`userchannels:${id}`, JSON.stringify(userChannels))
     },
     listChannels: async (id) => {
       if(!id) throw Error('Invalid id')
