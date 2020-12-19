@@ -146,8 +146,9 @@ export default () => {
           ).email
           data.email = email
           const email64 = window.btoa(email)
-          console.log(email64)
-          const res = await axios.get(`http://localhost:3001/users/${email64}`)
+          const res = await axios.get(`http://localhost:3001/users/${email64}`,{headers: {
+            'Authorization': `Bearer ${data.access_token}`
+           }})
           const user = res.data
           if(user){
             data.user = user
@@ -156,7 +157,7 @@ export default () => {
           // window.location = '/'
           history.push('/')
         }catch (err) {
-          console.error(err)
+          history.push('/Oups')
         }
       }
       fetch()
