@@ -76,7 +76,7 @@ export default () => {
   const styles = useStyles(theme)
   const { oauth, setOauth } = useContext(Context)
   const [username, setUserName] = useState('')
-  const [message, setMessage] = useState('You can change your username here')
+  const [userMessage, setUserMessage] = useState('You can change your username here')
   const [imageMessage, setImageMessage] = useState("Choose a way to change you an Avatar if you want and look at the result below!")
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openDZ, setOpenDZ] = useState(false)
@@ -194,7 +194,7 @@ export default () => {
 
   const handleNewUsername = async () => {
     if (!username) {
-      setMessage('Ohoh it looks like you forgot to enter your username')
+      setUserMessage('Ohoh it looks like you forgot to enter your username')
     } else {
       try {
         const data = {
@@ -209,7 +209,7 @@ export default () => {
         oauth.user = user.data
         setOauth(oauth)
       } catch (err) {
-        setMessage('Oops an error occur try again..')
+        setUserMessage('Oops an error occur try again..')
       }
     }
   }
@@ -230,7 +230,7 @@ export default () => {
       oauth.settings = settings.data
       setOauth(oauth)
     } catch (err) {
-      setMessage('Oops an error occur try again..')
+      setUserMessage('Oops an error occur try again..')
     }
   }
 
@@ -253,7 +253,7 @@ export default () => {
         oauth.user = user.data
         setOauth(oauth)
       } catch (err) {
-        setMessage('Oops an error occur try again..')
+        setImageMessage('Oops an error occur try again..')
       }
     }
   }
@@ -288,7 +288,7 @@ export default () => {
         alignItems="center"
       >
         <Typography color="textPrimary" variant="h5">
-          {message}
+          {userMessage}
         </Typography>
         <div css={{ marginBottom: '20px' }}>
           <Grid container

@@ -21,7 +21,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 const useStyles = (theme) => ({
   header: {
     padding: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.primary.dark,
   },
   headerLogIn: {
     backgroundColor: 'red',
@@ -93,7 +93,7 @@ export default () => {
 
   const buttonLogoutProps = {
     variant: "contained",
-    color: "primary",
+    color: "secondary",
     onClick: onClickLogout
   }
 
@@ -101,12 +101,12 @@ export default () => {
 
   const buttonSettingsProps ={
     variant: "contained",
-    color: "primary",
+    color: "secondary",
     onClick: handleSettings
   }
 
   const buttonHomeProps ={
-    color: "primary",
+    color: "secondary",
     onClick: handleMenu
   }
 
