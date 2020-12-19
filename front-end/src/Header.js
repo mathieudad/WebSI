@@ -100,6 +100,7 @@ export default () => {
 
 
   const buttonSettingsProps ={
+    variant: "contained",
     color: "primary",
     onClick: handleSettings
   }
