@@ -27,8 +27,11 @@ app.get('/channels', async (req, res) => {
 })
 
 app.post('/channels', async (req, res) => {
-  const channel = await db.channels.create(req.body)
+  const channel = await db.channels.create(req.body, req.user.email)
   await db.users.addChannel(req.user.email, channel.id, true)
+  await Promise.all(channel.members.map((member) => {
+    return db.users.addChannel(member, channel.id)
+  }))
   res.status(201).json(channel)
 })
 
@@ -87,6 +90,20 @@ app.put('/users/:id', async (req, res) => {
 app.get('/users/byname/:userName', async (req, res) => {
   const user = await db.users.getByName(req.params.userName)
   res.json(user)
+})
+
+app.post('/test/users', async (req, res) => {
+   const users = await Promise.all(req.body.map(async (mockedUser) => {
+    return new Promise(async (resolve, reject) => {
+      try{
+        const user = await db.users.create(mockedUser.user, mockedUser.email)
+        resolve(user)
+      }catch(err){
+        reject(err)
+      }
+    })
+  }))
+  res.status(201).json(users)
 })
 
 module.exports = app
