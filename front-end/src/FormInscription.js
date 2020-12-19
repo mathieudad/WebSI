@@ -35,8 +35,8 @@ const useStyles = (theme) => ({
 const Image = ({ image, theme }) => {
   //console.log(showImage(image))
   const style = ({
-    width: '100px',
-    heigh: '100px',
+    width: '70px',
+    heigh: '70px',
     borderRadius: '50%',
     border: '1px solid',
     borderColor: theme.palette.secondary.light,

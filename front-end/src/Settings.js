@@ -8,9 +8,8 @@ import TextField from '@material-ui/core/TextField';
 import Context from './Context';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { ResponsiveButton} from './ResponsiveButton';
+import { ResponsiveButton } from './ResponsiveButton';
 import Photo from './icons/photo.svg';
-import { useHistory } from "react-router-dom";
 import axios from 'axios';
 import Avatar from './Avatar';
 import md5 from 'md5';
@@ -22,6 +21,9 @@ import pet from './icons/pet.svg';
 import snowM from './icons/planche-a-neige.svg';
 import snowF from './icons/planche-a-neige-F.svg';
 import DropZone from './DropZone';
+import MenuItem from '@material-ui/core/MenuItem';
+import Switch from '@material-ui/core/Switch';
+import { FormControlLabel, FormGroup } from '@material-ui/core';
 
 const useStyles = (theme) => ({
   root: {
@@ -34,8 +36,8 @@ const useStyles = (theme) => ({
 
 const Image = ({ image, theme }) => {
   const style = ({
-    width: '100px',
-    heigh: '100px',
+    width: '70px',
+    heigh: '70px',
     borderRadius: '50%',
     border: '1px solid',
     borderColor: theme.palette.secondary.light,
@@ -46,10 +48,30 @@ const Image = ({ image, theme }) => {
 }
 
 
+const languages = [
+  {
+    value: 'EN',
+    label: 'English',
+  },
+  {
+    value: 'FR',
+    label: 'Fançais',
+  },
+  {
+    value: 'IT',
+    label: 'Italiano',
+  },
+  {
+    value: 'SAN',
+    label: 'Sanskrit',
+  }, {
+    value: 'NA',
+    label: "Na'vi"
+  }
+]
 
 //TODO : verifier la validité de l'username
 export default () => {
-  const history = useHistory()
   const theme = useTheme()
   const styles = useStyles(theme)
   const { oauth, setOauth } = useContext(Context)
@@ -59,9 +81,35 @@ export default () => {
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openDZ, setOpenDZ] = useState(false)
   const [image, setImage] = useState(Photo)
+  //oauth.settings.language
+  const [language, setLanguage] = useState('FR')
+  //oauth.settings.mode
+  const [switchState, setSwitchState] = useState(false)
+
+  const a = false
+
+  const [nameSwitch, setNameSwitch] = useState(a ? 'Light Mode' : 'Dark Mode')
+
+
+  const checkSwitch = () => {
+    if (!switchState) {
+      setNameSwitch('Light Mode')
+    } else {
+      setNameSwitch('Dark Mode')
+    }
+  }
 
   const handleChangeUsername = (event) => {
     setUserName(event.target.value)
+  }
+
+  const handleChangeLanguage = (event) => {
+    setLanguage(event.target.value);
+  };
+
+  const handleChangeSwitch = () => {
+    setSwitchState(!switchState)
+    checkSwitch()
   }
 
 
@@ -144,25 +192,45 @@ export default () => {
     setImageMessage('Wow... what a beautiful Avatar')
   }
 
-  const handleNewUsername = async () =>{
+  const handleNewUsername = async () => {
     if (!username) {
-        setMessage('Ohoh it looks like you forgot to enter your username')
-      }else {
-        try {
-          const data = {
-            name: username,
-          }
-          const user = await axios.post('http://localhost:3001/users', data, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${oauth.access_token}`
-            }
-          })
-          oauth.user = user.data
-          setOauth(oauth)
-        } catch (err) {
-          setMessage('Oops an error occur try again..')
+      setMessage('Ohoh it looks like you forgot to enter your username')
+    } else {
+      try {
+        const data = {
+          name: username,
         }
+        const user = await axios.post('http://localhost:3001/users', data, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        oauth.user = user.data
+        setOauth(oauth)
+      } catch (err) {
+        setMessage('Oops an error occur try again..')
+      }
+    }
+  }
+
+  const handleNewSettings = async () =>{
+    try {
+      const data = {
+        language : language,
+        mode : switchState
+      }
+
+      const settings = await axios.post('http://localhost:3001/settings', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      oauth.settings = settings.data
+      setOauth(oauth)
+    } catch (err) {
+      setMessage('Oops an error occur try again..')
     }
   }
 
@@ -171,25 +239,24 @@ export default () => {
     if (Object.is(image, Photo)) {
       setImageMessage('Ohoh it looks like you forgot to choose your avatar')
     } else {
-    try {
-      const data = {
-        avatar: image
-      }
-
-      const user = await axios.post('http://localhost:3001/users', data, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${oauth.access_token}`
+      try {
+        const data = {
+          avatar: image
         }
-      })
-      oauth.user = user.data
-      setOauth(oauth)
-      history.push('/')
-    } catch (err) {
-      setMessage('Oops an error occur try again..')
+
+        const user = await axios.post('http://localhost:3001/users', data, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        oauth.user = user.data
+        setOauth(oauth)
+      } catch (err) {
+        setMessage('Oops an error occur try again..')
+      }
     }
   }
-}
 
   const propsButton = {
     size: "large",
@@ -205,6 +272,13 @@ export default () => {
     onClick: handleNewUsername
   }
 
+  const propsSetButton ={
+    size: "large",
+    variant: "contained",
+    color: "primary",
+    onClick: handleNewSettings
+  }
+
   return (
     <div css={styles.root}>
       <Grid
@@ -217,35 +291,75 @@ export default () => {
           {message}
         </Typography>
         <div css={{ marginBottom: '20px' }}>
-            <Grid container
-             direction="row"
-             alignItems="center"
-             justify="flex-end"
-             spacing ={3}
-            >
-                <Grid item>
+          <Grid container
+            direction="row"
+            alignItems="center"
+            justify="flex-end"
+            spacing={3}
+          >
+            <Grid item>
+              <TextField
+                autoFocus
+                required
+                variant="outlined"
+                color="primary"
+                id="name"
+                label="username"
+                margin="normal"
+                onChange={handleChangeUsername}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  )
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <ResponsiveButton name={'Send new Username'} props={propsUsernameButton} />
+            </Grid>
+          </Grid>
+        </div>
+        <div> 
+          <Grid container
+          direction="row"
+          justify="center"
+          alignItems="flex-start"
+          spacing = {2}>
+            <Grid item >
           <TextField
-            autoFocus
-            required
-            variant="outlined"
-            color="primary"
-            id="name"
-            label="username"
-            margin="normal"
-            onChange={handleChangeUsername}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              )
-            }}
-          />
+          select
+          label="Select"
+          variant="outlined"
+          value={language}
+          onChange={handleChangeLanguage}
+          helperText="Please select your language"
+        >
+          {languages.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        </Grid>
+        <Grid item>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Switch
+                checked={switchState}
+                onChange={handleChangeSwitch}
+                label={nameSwitch}
+                color="primary"
+              />}
+              label={nameSwitch}
+              labelPlacement="start" />
+          </FormGroup>
           </Grid>
           <Grid item>
-          <ResponsiveButton name= {'Send new Username'} props={propsUsernameButton}/>
-        </Grid>
-        </Grid>
+            <ResponsiveButton name="send Settings" props={propsSetButton}/>
+          </Grid>
+          </Grid>
         </div>
         <Avatar HandleButton1={handleGravatar} HandleButton2={handleOurAvatar} HandleButton3={handleDropZoneAvatar} />
         <OurAvatarDialog open={openAvatar} onClose={handleCloseOurAvatar} handleSetNumber={handleSetNumber} aria-labelledby="form-dialog-title" />
