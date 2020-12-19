@@ -88,7 +88,9 @@ app.get('/users/:id/channels', async (req, res) => {
 })
 
 app.put('/users/:id', async (req, res) => {
-  const user = await db.users.update(req.body)
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  if(id != req.user.email) throw Error('Unauthorized')
+  const user = await db.users.update(id, req.body)
   res.json(user)
 })
 
