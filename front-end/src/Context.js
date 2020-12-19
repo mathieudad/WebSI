@@ -19,7 +19,13 @@ export const Provider = ({
       oauth: oauth,
       setOauth: (oauth) => {
         if(oauth){
-          setCookie('oauth', oauth)
+          if(oauth.user && !oauth.user.avatar)
+            setCookie('oauth', oauth)
+          else if(oauth.user){
+            let copy = JSON.parse(JSON.stringify(oauth))
+            delete copy.user.avatar
+            setCookie('oauth', copy)
+          }
         }else{
           setCurrentChannel(null)
           setChannels([])

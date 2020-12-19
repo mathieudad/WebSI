@@ -64,6 +64,7 @@ export default({open,onClose}) => {
   const {oauth} = useContext(Context)
   const [member, setMember] = useState('')
   const [members, setMembers] = useState([])
+  const [userNameMembers, setUsernameMember] = useState([])
   const [nameChannel, setNameChannel] = useState('')
   const [diagMess, setDiagMess] = useState('Please enter the name of the channel and participants you want to chat with.')
   const [smiley, setSmiley] = useState(false)
@@ -85,6 +86,7 @@ export default({open,onClose}) => {
           }
         })     
         if(email){
+          setUsernameMember([...userNameMembers, member])
           setMembers([...members, email])
           setMember('')
         }
@@ -102,6 +104,7 @@ export default({open,onClose}) => {
   const handleCancelDialog = () => {
     onClose()
     setMember('')
+    setUsernameMember([])
     setMembers([])
     setDiagMess('Please enter the name of the channel and participants you want to chat with.')
     setSmiley(false)
@@ -112,31 +115,34 @@ export default({open,onClose}) => {
       setDiagMess('Oops you forgot to give a name to your channel')
       setSmiley(true)
       return
+    }else {
+      try{
+        let channel = {
+          name : nameChannel,
+          members : JSON.stringify(members)
+        }
+        await axios.post('http://localhost:3001/channels',channel,{
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${oauth.access_token}`
+        }})
+        
+        setDiagMess('Please enter the name of the channel and participants you want to chat with.')
+        setMembers([])
+        setUsernameMember([])
+        setMember('')
+        onClose()
+        setSmiley(false)
+
+      }catch(err){
+        setDiagMess('Oops an error occur please try again ')
+        setUsernameMember([])
+        setMembers([])
+        setMember('')
+        setSmiley(true)
+      }
     }
-
-    try{
-      let channel = {
-      name : nameChannel,
-      members : JSON.stringify(members)}
-      await axios.post('http://localhost:3001/channels',channel,{
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${oauth.access_token}`
-       }})
-
-       setDiagMess('Please enter the name of the channel and participants you want to chat with.')
-       setMembers([])
-       setMember('')
-       onclose()
-       setSmiley(false)
-
-    }catch(err){
-      setDiagMess('Oops an error occur please try again ')
-      setMembers([])
-      setMember('')
-      setSmiley(true)
-    }
-  }
+}
 
   const Smiley = () => {
     if(smiley)
@@ -147,14 +153,12 @@ export default({open,onClose}) => {
       return <> <SentimentVerySatisfiedIcon fontSize="large"/></>
   }
 
-
   const buttonProps= {
     size : "small",
     variant:"contained",
     color: "primary",
     onClick : addMember
   }
-
 
   return (
       <div >
@@ -178,7 +182,7 @@ export default({open,onClose}) => {
           fullWidth
           onChange = {handleChangeNameChannel}
         />
-          <Members members={members}/>
+          <Members members={userNameMembers}/>
           <div css={style.member}>
             <TextField
               style= {style.TextField}

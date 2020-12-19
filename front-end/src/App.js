@@ -8,7 +8,7 @@ import Header from './Header'
 import Main from './Main'
 import Login from './Login'
 import Context from './Context'
-import UsernameForm from './UsernameForm'
+import FormInscription from './FormInscription'
 // Rooter
 import {
   Switch,
@@ -53,7 +53,7 @@ export default () => {
                   state: { from: location }
                 }}
               />) : (
-              <UsernameForm/>
+              <FormInscription/>
               )
             ) : (
               <Login />
