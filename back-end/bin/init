@@ -5,7 +5,7 @@ const Authorization = "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjA2Mjk5YTI5ZjNmYzA5Nj
 
 const main = async function () {
   await Promise.all([{
-    name: 'OM',
+    name: 'OM2',
     messages: [{
       author: 'sergei',
       creation: 1602831101929,
@@ -118,24 +118,23 @@ const main = async function () {
       members: []
     },{
       headers: {
+        'Content-Type': 'application/json',
         Authorization: Authorization
       }
     })
-    return Promise.all(channel.messages.map(async (message) => {
-      await axios.post(`http://localhost:3001/channels/${id}/messages`, message,{
+    return Promise.all(channel.messages.map(async (message) => (
+      axios.post(`http://localhost:3001/channels/${id}/messages`, message,{
         headers: {
           'Content-Type': 'application/json',
           Authorization: Authorization
         }
       })
-    }))
+    )))
   }))
-  process.exit()
 }
 
 try{
   main()
-  process.exit()
 }catch(err){
   console.error(err)
   process.exit()
