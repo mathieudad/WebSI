@@ -71,6 +71,7 @@ app.get('/users', async (req, res) => {
 
 app.post('/users', async (req, res) => {
   const user = await db.users.create(req.body, req.user.email)
+  await db.settings.put(user.email, {mode: true, language: 'EN'})
   res.status(201).json(user)
 })
 
@@ -97,6 +98,19 @@ app.put('/users/:id', async (req, res) => {
 app.get('/users/byname/:userName', async (req, res) => {
   const user = await db.users.getByName(req.params.userName)
   res.json(user)
+})
+
+// Users settings
+app.get('/users/:id/settings', async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const user = await db.settings.get(id)
+  res.json(user)
+})
+
+app.post('/users/:id/settings', async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const settings = await db.settings.put(id, req.body)
+  res.status(201).json(settings)
 })
 
 app.post('/test/users', async (req, res) => {

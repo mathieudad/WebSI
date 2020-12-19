@@ -177,6 +177,29 @@ module.exports = {
       delete store.users[id]
     }
   },
+  settings: {
+    get : async (idUser) => {
+      if (!idUser) throw Error('Invalid id')
+      try {
+        const data = await db.get(`usersettings:${idUser}`)
+        const settings = JSON.parse(data)
+        return settings
+      } catch (err) {
+        //TODO Check error type
+        return null
+      }
+    },
+    put : async (idUser, settings) => {
+      try{
+        const data = await db.get(`usersettings:${idUser}`)
+        const originals = JSON.parse(data)
+        await db.put(`usersettings:${idUser}`, JSON.stringify(merge(originals, settings)))
+      }catch(err){ //If there were no settings for the user, we create them
+        //TODO check error type
+        await db.put(`usersettings:${idUser}`, JSON.stringify(settings))
+      }
+    }
+  },
   admin: {
     clear: async () => {
       await db.clear()
