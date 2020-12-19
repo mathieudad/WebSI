@@ -63,14 +63,15 @@ module.exports = {
       }))
       return merge(message, { channelId: channelId, creation: creation })
     },
-    update: async (channelId, message) => {
+    update: async (channelId, messageId, message) => {
       if (!channelId) throw Error('Invalid channel')
       if (!message.author) throw Error('Invalid message author')
       if (!message.content) throw Error('Invalid message content')
-      if (!message.creation) throw Error('Invalid message creation')
-      delete message.channelId
-      delete message.creation
-      await db.put(`messages:${channelId}:${message.creation}`, message)
+      if (!messageId) throw Error('Invalid message creation')
+      await db.put(`messages:${channelId}:${messageId}`, JSON.stringify({
+        author: message.author,
+        content: message.content
+      }))
       return merge(message, { channelId: channelId, creation: creation })
     },
     list: async (channelId) => {
