@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import Context from './Context';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { ResponsiveButton } from './ResponsiveButton';
+import { ResponsiveButton} from './ResponsiveButton';
 import Photo from './icons/photo.svg';
 import { useHistory } from "react-router-dom";
 import axios from 'axios';
@@ -25,7 +25,7 @@ import DropZone from './DropZone';
 
 const useStyles = (theme) => ({
   root: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.main,
     flex: '1 1 auto',
     display: 'flex',
     height: '100%'
@@ -33,7 +33,6 @@ const useStyles = (theme) => ({
 })
 
 const Image = ({ image, theme }) => {
-  //console.log(showImage(image))
   const style = ({
     width: '100px',
     heigh: '100px',
@@ -46,6 +45,8 @@ const Image = ({ image, theme }) => {
   return <img alt="Welcome" src={image} css={style} />
 }
 
+
+
 //TODO : verifier la validité de l'username
 export default () => {
   const history = useHistory()
@@ -53,46 +54,17 @@ export default () => {
   const styles = useStyles(theme)
   const { oauth, setOauth } = useContext(Context)
   const [username, setUserName] = useState('')
-  const [message, setMessage] = useState('please enter the username you want to use (you can change it later)')
-  const [image, setImage] = useState(Photo)
-  const [imageMessage, setImageMessage] = useState("Choose a way to add you an Avatar and look at the result below!")
+  const [message, setMessage] = useState('You can change your username here')
+  const [imageMessage, setImageMessage] = useState("Choose a way to change you an Avatar if you want and look at the result below!")
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openDZ, setOpenDZ] = useState(false)
-
+  const [image, setImage] = useState(Photo)
 
   const handleChangeUsername = (event) => {
     setUserName(event.target.value)
   }
 
 
-  const handleNewUser = async () => {
-    if (!username || Object.is(image, Photo)) {
-      if (!username) {
-        setMessage('Ohoh it looks like you forgot to enter your username')
-      }
-      if (Object.is(image, Photo)) {
-        setImageMessage('Ohoh it looks like you forgot to choose your avatar')
-      }
-    } else {
-      try {
-        const data = {
-          name: username,
-          avatar: image
-        }
-        const user = await axios.post('http://localhost:3001/users', data, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${oauth.access_token}`
-          }
-        })
-        oauth.user = user.data
-        setOauth(oauth)
-        history.push('/')
-      } catch (err) {
-        setMessage('Oops an error occur try again..')
-      }
-    }
-  }
 
   const handleGravatar = async () => {
     const hashEmail = md5((oauth.email).toLowerCase())
@@ -172,11 +144,65 @@ export default () => {
     setImageMessage('Wow... what a beautiful Avatar')
   }
 
+  const handleNewUsername = async () =>{
+    if (!username) {
+        setMessage('Ohoh it looks like you forgot to enter your username')
+      }else {
+        try {
+          const data = {
+            name: username,
+          }
+          const user = await axios.post('http://localhost:3001/users', data, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${oauth.access_token}`
+            }
+          })
+          oauth.user = user.data
+          setOauth(oauth)
+        } catch (err) {
+          setMessage('Oops an error occur try again..')
+        }
+    }
+  }
+
+
+  const handleNewAvatar = async () => {
+    if (Object.is(image, Photo)) {
+      setImageMessage('Ohoh it looks like you forgot to choose your avatar')
+    } else {
+    try {
+      const data = {
+        avatar: image
+      }
+
+      const user = await axios.post('http://localhost:3001/users', data, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      oauth.user = user.data
+      setOauth(oauth)
+      history.push('/')
+    } catch (err) {
+      setMessage('Oops an error occur try again..')
+    }
+  }
+}
+
   const propsButton = {
     size: "large",
     variant: "contained",
     color: "primary",
-    onClick: handleNewUser
+    onClick: handleNewAvatar
+  }
+
+  const propsUsernameButton = {
+    size: "large",
+    variant: "contained",
+    color: "primary",
+    onClick: handleNewUsername
   }
 
   return (
@@ -191,6 +217,13 @@ export default () => {
           {message}
         </Typography>
         <div css={{ marginBottom: '20px' }}>
+            <Grid container
+             direction="row"
+             alignItems="center"
+             justify="flex-end"
+             spacing ={3}
+            >
+                <Grid item>
           <TextField
             autoFocus
             required
@@ -208,6 +241,11 @@ export default () => {
               )
             }}
           />
+          </Grid>
+          <Grid item>
+          <ResponsiveButton name= {'Send new Username'} props={propsUsernameButton}/>
+        </Grid>
+        </Grid>
         </div>
         <Avatar HandleButton1={handleGravatar} HandleButton2={handleOurAvatar} HandleButton3={handleDropZoneAvatar} />
         <OurAvatarDialog open={openAvatar} onClose={handleCloseOurAvatar} handleSetNumber={handleSetNumber} aria-labelledby="form-dialog-title" />
@@ -216,7 +254,7 @@ export default () => {
           {imageMessage}
         </Typography>
         <Image image={image} theme={theme} />
-        <ResponsiveButton name={'Send'} props={propsButton} />
+        <ResponsiveButton name={'Send new avatar'} props={propsButton} />
       </Grid>
     </div>
   )

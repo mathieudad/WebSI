@@ -10,8 +10,12 @@ import Context from './Context';
 import useSWR from "swr";
 import axios from "axios";
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import { ResponsiveButton } from './ResponsiveButton';
+import { ResponsiveButton, ResponsiveIconButton } from './ResponsiveButton';
 import { Grid, Typography } from '@material-ui/core';
+import ForumIcon from '@material-ui/icons/Forum';
+import { useHistory } from "react-router-dom";
+import SettingsIcon from '@material-ui/icons/Settings';
+
 
 
 const useStyles = (theme) => ({
@@ -28,7 +32,7 @@ const useStyles = (theme) => ({
   menu: {
     [theme.breakpoints.up('sm')]: {
       display: 'none !important',
-    },
+    }
   }
 })
 
@@ -36,6 +40,7 @@ const useStyles = (theme) => ({
 
 export default () => {
   const styles = useStyles(useTheme())
+  const history = useHistory()
   let avatar = null
   const {
     oauth, setOauth,
@@ -78,15 +83,31 @@ export default () => {
     setOauth(null)
   }
 
+  const handleMenu = () => {
+    history.push('./')
+  }
 
-  const buttonProps = {
-    size: "medium",
+  const handleSettings = () => {
+    history.push('./settings')
+  }
+
+  const buttonLogoutProps = {
     variant: "contained",
     color: "primary",
     onClick: onClickLogout
   }
 
 
+
+  const buttonSettingsProps ={
+    color: "primary",
+    onClick: handleSettings
+  }
+
+  const buttonHomeProps ={
+    color: "primary",
+    onClick: handleMenu
+  }
 
 
 
@@ -109,8 +130,12 @@ export default () => {
               justify="space-between"
               alignItems="center">
               {avatar}
-              <ResponsiveButton name="logout" props={buttonProps} icon={<MeetingRoomIcon />} />
-
+              <ResponsiveButton name="Ece Chat" props={buttonHomeProps} icon={<ForumIcon/>}/>
+              
+              <div> 
+              <ResponsiveIconButton props={buttonSettingsProps} icon={<SettingsIcon/>}/>
+              <ResponsiveButton name="logout" props={buttonLogoutProps} icon={<MeetingRoomIcon />} />
+              </div>
             </Grid>
           </div>)
           : (<Typography color="textPrimary" variant="h5">Hello</Typography>)

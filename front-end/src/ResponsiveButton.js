@@ -24,14 +24,14 @@ export function ResponsiveIconButton({props, icon}) {
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   props.style = isSmallScreen ? {
-    position: 'relative', 
-    top: '32px',
-    marginLeft : '3px'
+    position: 'relative',
+    //marginLeft : '3px'
   } : {
     position: 'relative', 
-    top: '32px',
-    marginLeft : '12px'
+    //marginLeft : '12px'
   }
+
+  props.size = isSmallScreen ? "small" : "medium"
 
   return (
     <IconButton {...props}>

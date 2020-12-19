@@ -4,13 +4,14 @@ import { jsx } from '@emotion/core'
 // Layout
 import { useTheme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import {ReactComponent as ChannelIcon} from './icons/channel.svg';
-import {ReactComponent as FriendsIcon} from './icons/friends.svg';
 import {ReactComponent as SettingsIcon} from './icons/settings.svg';
 import AddIcon from '@material-ui/icons/Add';
 import CreateChannel from './CreateChannel';
 import {ResponsiveButton} from './ResponsiveButton';
+import {
+  useHistory
+} from "react-router-dom";
 
 const useStyles = (theme) => ({
   root: {
@@ -36,20 +37,31 @@ const useStyles = (theme) => ({
 
 export default () => {
   const styles = useStyles(useTheme())
-  const [open, setOpen] = useState(false)
+  const [openNewChannel, setOpenNewChannel] = useState(false)
+  const history = useHistory()
 
-  const handleClickOpen = () => {
-    setOpen(true);
+  const handleOpenNewChannel = () => {
+    setOpenNewChannel(true);
+  }
+
+  const handleCloseNewChannel = () => {
+    setOpenNewChannel(false);
+  }
+  const handleOpenSettings = () => {
+    history.push('/settings')
   }
   
-  const handleClose = () => {
-    setOpen(false);
-  }
 
   const propsChannelButton = {
     variant:"contained",
     color:"primary",
-    onClick: handleClickOpen
+    onClick: handleOpenNewChannel
+}
+
+const propsSettingsButton = {
+  variant:"contained",
+  color:"primary",
+  onClick: handleOpenSettings
 }
 
   return (
@@ -62,24 +74,14 @@ export default () => {
         <Grid item xs>
           <div css={styles.card}>
             <ChannelIcon css={styles.icon} />
-       <ResponsiveButton name = {'Create a Channel'} props = {propsChannelButton} icon={<AddIcon/>}/>
-      <CreateChannel open={open} onClose= {handleClose} aria-labelledby="form-dialog-title"/>
-          </div>
-        </Grid>
-        <Grid item xs>
-          <div css={styles.card}>
-            <FriendsIcon css={styles.icon} />
-            <Typography color="textPrimary">
-              Invite friends
-            </Typography>
+       <ResponsiveButton name= {'Create a Channel'} props = {propsChannelButton} icon={<AddIcon/>}/>
+      <CreateChannel open={openNewChannel} onClose= {handleCloseNewChannel} aria-labelledby="form-dialog-title"/>
           </div>
         </Grid>
         <Grid item xs>
           <div css={styles.card}>
             <SettingsIcon css={styles.icon} />
-            <Typography color="textPrimary">
-              Settings
-            </Typography>
+            <ResponsiveButton name= {'Open Settings'} props = {propsSettingsButton} />
           </div>
         </Grid>
       </Grid>

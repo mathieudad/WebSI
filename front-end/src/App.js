@@ -16,8 +16,8 @@ import {
   Redirect,
   useLocation
 } from "react-router-dom"
-
 import {useTheme} from '@material-ui/core/styles';
+import Settings from './Settings';
 
 const useStyles = (theme) => ({
   root: {
@@ -74,6 +74,10 @@ export default () => {
             )
           }
         </Route>
+        <Route path="/settings">
+          <Settings />
+        </Route>
+
         <Route path="/Oups">
           <Oups />
         </Route>
