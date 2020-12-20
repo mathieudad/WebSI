@@ -211,9 +211,11 @@ module.exports = {
         const data = await db.get(`usersettings:${idUser}`)
         const originals = JSON.parse(data)
         await db.put(`usersettings:${idUser}`, JSON.stringify(merge(originals, settings)))
+        return settings
       }catch(err){ //If there were no settings for the user, we create them
         //TODO check error type
         await db.put(`usersettings:${idUser}`, JSON.stringify(settings))
+        return settings
       }
     }
   },
