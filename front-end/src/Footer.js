@@ -1,31 +1,30 @@
-
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 import { Grid, Typography } from '@material-ui/core';
-import {useTheme} from '@material-ui/core/styles';
 import CopyrightIcon from '@material-ui/icons/Copyright';
 
-const useStyles = theme => ({
+const useStyles = {
   footer: {
     height: '30px',
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: '#424242',
     flexShrink: 0,
-  },
-})
+  }
+}
 
 export default () => {
-  const styles = useStyles(useTheme())
+  const styles = useStyles
+
   return (
     <footer style={styles.footer}>
-      <Grid 
+      <Grid
         container
         direction="row"
         justify="center"
         alignItems="flex-end">
-          <CopyrightIcon/> 
-          <Typography variant="subtitle2">all right reserved : Mathieu de Campou - Mathieu Dadoun
+        <CopyrightIcon />
+        <Typography variant="subtitle2">all right reserved : Mathieu de Campou - Mathieu Dadoun
           </Typography>
-        </Grid>
+      </Grid>
     </footer>
-  );
+  )
 }

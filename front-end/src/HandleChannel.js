@@ -1,21 +1,22 @@
-import React from 'react';
-import { useState, useContext, useEffect } from 'react';
+import React from 'react'
+import { useState, useContext, useEffect } from 'react'
 import Context from './Context'
-import axios from 'axios';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import axios from 'axios'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import InputAdornment from '@material-ui/core/InputAdornment'
 import { ResponsiveIconButton } from './ResponsiveButton'
-import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied';
+import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissatisfied'
 import Grid from '@material-ui/core/Grid';
-import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
+import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied'
+
 
 const style = {
   TextField: {
@@ -168,7 +169,6 @@ export default ({ open, onClose, channel }) => {
           'Authorization': `Bearer ${oauth.access_token}`
         }
       })
-
       setChannels(channels.filter(ch => ch.id !== channel.id))
       onClose()
       setDiagMess('Please enter the name of the channel and participants you want to chat with.')
@@ -186,7 +186,6 @@ export default ({ open, onClose, channel }) => {
 
   const handleLeaveChannel = async () => {
     try {
-
       await axios.delete(`http://localhost:3001/channels/${channel.id}/${oauth.user.id}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -199,7 +198,7 @@ export default ({ open, onClose, channel }) => {
       setUsernameMember([])
       setMember('')
       setSmiley(false)
-
+      
     } catch (err) {
       console.log(err)
       setDiagMess('Oops an error occur please try again ')

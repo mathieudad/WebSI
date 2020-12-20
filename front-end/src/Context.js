@@ -1,5 +1,4 @@
-
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useCookies } from 'react-cookie'
 
 const Context = React.createContext()
@@ -14,19 +13,20 @@ export const Provider = ({
   const [drawerVisible, setDrawerVisible] = useState(false)
   const [channels, setChannels] = useState([])
   const [currentChannel, setCurrentChannel] = useState(null)
+
   return (
     <Context.Provider value={{
       oauth: oauth,
       setOauth: (oauth) => {
-        if(oauth){
-          if(oauth.user && !oauth.user.avatar)
+        if (oauth) {
+          if (oauth.user && !oauth.user.avatar)
             setCookie('oauth', oauth)
-          else if(oauth.user){
+          else if (oauth.user) {
             let copy = JSON.parse(JSON.stringify(oauth))
             delete copy.user.avatar
             setCookie('oauth', copy)
           }
-        }else{
+        } else {
           setCurrentChannel(null)
           setChannels([])
           removeCookie('oauth')
@@ -39,7 +39,7 @@ export const Provider = ({
       setChannels: setChannels,
       currentChannel: currentChannel,
       setCurrentChannel: (channelId) => {
-        const channel = channels.find( channel => channel.id === channelId)
+        const channel = channels.find(channel => channel.id === channelId)
         setCurrentChannel(channel)
       },
     }}>{children}</Context.Provider>

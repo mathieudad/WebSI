@@ -1,20 +1,18 @@
 import { useContext } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Context from './Context';
-import useSWR from "swr";
-import axios from "axios";
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
-import { ResponsiveButton, ResponsiveIconButton } from './ResponsiveButton';
-import { Grid, Typography } from '@material-ui/core';
-import ForumIcon from '@material-ui/icons/Forum';
-import { useHistory } from "react-router-dom";
-import SettingsIcon from '@material-ui/icons/Settings';
-
+import { useTheme } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
+import MenuIcon from '@material-ui/icons/Menu'
+import Context from './Context'
+import useSWR from "swr"
+import axios from "axios"
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
+import { ResponsiveButton, ResponsiveIconButton } from './ResponsiveButton'
+import { Grid, Typography } from '@material-ui/core'
+import ForumIcon from '@material-ui/icons/Forum'
+import { useHistory } from "react-router-dom"
+import SettingsIcon from '@material-ui/icons/Settings'
 
 
 const useStyles = (theme) => ({
@@ -46,14 +44,15 @@ export default () => {
 
   if (oauth && oauth.user) {
     const email64 = window.btoa(oauth.email)
-    const url = `http://localhost:3001/users/${email64}`;
+    const url = `http://localhost:3001/users/${email64}`
 
     const fetcher = (...args) => axios.get(...args, {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
       }
-    }).then((res) => res.data);
-    const { data, error } = useSWR(url, fetcher);
+    }).then((res) => res.data)
+
+    const { data, error } = useSWR(url, fetcher)
     avatar = !error && !data ? (<div>{oauth.user.name} loading..</div>)
       : (data ? (<div>
         <Grid
@@ -61,11 +60,10 @@ export default () => {
           direction="row"
           justify="flex-start"
           alignItems="center">
-            <img alt="avatar" src={data.avatar} heigh="40%" width="40%" />
-          
-            <Typography color="textPrimary" variant="h5">
-              {oauth.user.name}
-            </Typography>
+          <img alt="avatar" src={data.avatar} heigh="40%" width="40%" />
+          <Typography color="textPrimary" variant="h5">
+            {oauth.user.name}
+          </Typography>
         </Grid>
       </div>) : null)
   }
@@ -87,18 +85,19 @@ export default () => {
   const handleSettings = () => {
     history.replace('/settings')
   }
+
   const buttonLogoutProps = {
     variant: "contained",
-    color: "secondary",
+    color: "#ffffff",
     onClick: onClickLogout
   }
-  const buttonSettingsProps ={
+  const buttonSettingsProps = {
     variant: "contained",
-    color: "secondary",
+    color: "#ffffff",
     onClick: handleSettings
   }
-  const buttonHomeProps ={
-    color: "secondary",
+  const buttonHomeProps = {
+    color: "#ffffff",
     onClick: handleMenu
   }
 
@@ -121,16 +120,16 @@ export default () => {
               justify="space-between"
               alignItems="center">
               {avatar}
-              <ResponsiveButton name="Ece Chat" props={buttonHomeProps} icon={<ForumIcon/>}/>
-              
-              <div> 
-              <ResponsiveIconButton props={buttonSettingsProps} icon={<SettingsIcon/>}/>
-              <ResponsiveButton name="logout" props={buttonLogoutProps} icon={<MeetingRoomIcon />} />
+              <ResponsiveButton name="Ece Chat" props={buttonHomeProps} icon={<ForumIcon />} />
+
+              <div>
+                <ResponsiveIconButton props={buttonSettingsProps} icon={<SettingsIcon />} />
+                <ResponsiveButton name="logout" props={buttonLogoutProps} icon={<MeetingRoomIcon />} />
               </div>
             </Grid>
           </div>)
           : (<Typography color="textPrimary" variant="h5">Hello</Typography>)
       }
     </header>
-  );
+  )
 }

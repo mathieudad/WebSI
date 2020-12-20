@@ -1,22 +1,20 @@
-import React from 'react';
-import { useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Button from '@material-ui/core/Button';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import { Grid } from '@material-ui/core';
-import { ResponsiveButton } from './ResponsiveButton';
-import beer from './icons/beer.svg';
-import kitty from './icons/kitty.svg';
-import masque from './icons/masque.svg';
-import pet from './icons/pet.svg';
-import snowM from './icons/planche-a-neige.svg';
-import snowF from './icons/planche-a-neige-F.svg';
-
-
+import React from 'react'
+import { useState } from 'react'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import Button from '@material-ui/core/Button'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import { Grid } from '@material-ui/core'
+import { ResponsiveButton } from '../ResponsiveButton'
+import beer from '../icons/beer.svg'
+import kitty from '../icons/kitty.svg'
+import masque from '../icons/masque.svg'
+import pet from '../icons/pet.svg'
+import snowM from '../icons/planche-a-neige.svg'
+import snowF from '../icons/planche-a-neige-F.svg'
 
 
 const DiagMessage = ({ diagMess }) => {
@@ -62,7 +60,6 @@ const Image = ({ image, number, handleSetNumber, onClose }) => {
     )
 }
 
-
 export default ({ open, onClose, handleSetNumber }) => {
     const [diagMess] = useState('Choose your favorite')
 
@@ -70,7 +67,7 @@ export default ({ open, onClose, handleSetNumber }) => {
         onClose()
     }
 
-    function FormRow1() {
+    const FormRow1 = () => {
         return (
             <React.Fragment>
                 <Grid item xs={4} spacing={3}>
@@ -83,10 +80,10 @@ export default ({ open, onClose, handleSetNumber }) => {
                     <Image image={beer} handleSetNumber={handleSetNumber} number={3} onClose={onClose} />
                 </Grid>
             </React.Fragment>
-        );
+        )
     }
 
-    function FormRow2() {
+    const FormRow2 = () => {
         return (
             <React.Fragment>
                 <Grid item xs={4} spacing={3} >
@@ -99,7 +96,7 @@ export default ({ open, onClose, handleSetNumber }) => {
                     <Image image={masque} handleSetNumber={handleSetNumber} number={6} onClose={onClose} />
                 </Grid>
             </React.Fragment>
-        );
+        )
     }
 
     return (<div>
@@ -123,5 +120,4 @@ export default ({ open, onClose, handleSetNumber }) => {
             </DialogActions>
         </Dialog>
     </div>)
-
 }

@@ -1,4 +1,4 @@
-import { useContext, useState} from 'react'
+import { useContext, useState } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Local
@@ -16,48 +16,48 @@ import {
   Redirect,
   useLocation
 } from "react-router-dom"
-import {useTheme} from '@material-ui/core/styles';
-import Settings from './Settings';
+import Settings from './Settings'
 
-const useStyles = (theme) => ({
+
+const useStyles = {
   root: {
     boxSizing: 'border-box',
     display: 'flex',
     flexDirection: 'column',
     backgroundColor: '#FFFFFF',
     padding: '50px',
-  },
-})
+  }
+}
 
 export default () => {
   const location = useLocation()
-  const {oauth} = useContext(Context)
-  const theme = useTheme()
-  const styles = useStyles(theme)
+  const { oauth } = useContext(Context)
+  const styles = useStyles
   const [drawerMobileVisible, setDrawerMobileVisible] = useState(false)
   const drawerToggleListener = () => {
     setDrawerMobileVisible(!drawerMobileVisible)
   }
+
   return (
     <div className="App" css={styles.root}>
-      <Header drawerToggleListener={drawerToggleListener}/>
+      <Header drawerToggleListener={drawerToggleListener} />
       <Switch>
         <Route exact path="/">
           {
             oauth ? (
-              oauth.user ? 
-              (<Redirect
+              oauth.user ?
+                (<Redirect
 
-                to={{
-                  pathname: "/channels",
-                  state: { from: location }
-                }}
-              />) : (
-              <FormInscription/>
-              )
+                  to={{
+                    pathname: "/channels",
+                    state: { from: location }
+                  }}
+                />) : (
+                  <FormInscription />
+                )
             ) : (
-              <Login />
-            )
+                <Login />
+              )
           }
         </Route>
         <Route path="/channels">
@@ -65,13 +65,13 @@ export default () => {
             oauth && oauth.user ? (
               <Main />
             ) : (
-              <Redirect
-                to={{
-                  pathname: "/",
-                  state: { from: location }
-                }}
-              />
-            )
+                <Redirect
+                  to={{
+                    pathname: "/",
+                    state: { from: location }
+                  }}
+                />
+              )
           }
         </Route>
         <Route path="/settings">
@@ -84,5 +84,5 @@ export default () => {
       </Switch>
       <Footer />
     </div>
-  );
+  )
 }
