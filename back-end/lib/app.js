@@ -145,31 +145,4 @@ app.put('/users/:id/settings', async (req, res) => {
   res.status(201).json(settings)
 })
 
-app.get('/test/users', async (req, res) => {
-  const mockedUsers = [
-    {
-      "user": {
-        "name": "Thauvin"
-      },
-      "email": "dGhhdXZpbkBnbWFpbC5jb20="
-    },{
-      "user": {
-        "name": "Payet"
-      },
-      "email": "cGF5ZXRAZ21haWwuY29t"
-    }
-  ]
-   const users = await Promise.all(mockedUsers.map(async (mockedUser) => {
-    return new Promise(async (resolve, reject) => {
-      try{
-        const user = await db.users.create(mockedUser.user, mockedUser.email)
-        resolve(user)
-      }catch(err){
-        reject(err)
-      }
-    })
-  }))
-  res.status(201).json(users)
-})
-
 module.exports = app
