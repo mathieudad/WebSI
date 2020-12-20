@@ -2,7 +2,6 @@ import React from 'react'
 import { forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-import { useTheme } from '@material-ui/core/styles'
 import unified from 'unified'
 import markdown from 'remark-parse'
 import remark2rehype from 'remark-rehype'
@@ -25,7 +24,15 @@ dayjs.updateLocale('en', {
   }
 })
 
-const useStyles = (theme) => ({
+
+
+function timeConverter(microtime){
+  var time = new Date(microtime /1000)
+  var date = time.toDateString() + ' '+  time.toLocaleTimeString() 
+  return date;
+}
+
+const useStyles = {
   root: {
     position: 'relative',
     flex: '1 1 auto',
@@ -57,7 +64,7 @@ const useStyles = (theme) => ({
     top: 0,
     width: '50px',
   },
-})
+}
 
 export default forwardRef(({
   channel,
@@ -69,7 +76,7 @@ export default forwardRef(({
   currentEditingMessage,
   cancelCurrentModification
 }, ref) => {
-  const styles = useStyles(useTheme())
+  const styles = useStyles
 
   // Expose the `scroll` action
   useImperativeHandle(ref, () => ({
@@ -130,7 +137,8 @@ export default forwardRef(({
               <p>
                 <span>{message.author}</span>
                 {' - '}
-                <span>{dayjs().calendar(message.creation)}</span>
+                {console.log(message.creation)}
+                <span>{timeConverter(parseInt(message.creation))}</span>
                 <IconButton size='small' color='secondary' onClick={onDeletion} value={message.creation}>
                   <DeleteForeverIcon />
                 </IconButton>
