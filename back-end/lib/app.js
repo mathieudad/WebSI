@@ -45,6 +45,11 @@ app.put('/channels/:id', async (req, res) => {
   res.json(channel)
 })
 
+app.delete('/channels/:id', async (req, res) => {
+  const channel = await db.channels.delete(req.params.id)
+  res.json(channel)
+})
+
 // Messages
 
 app.get('/channels/:id/messages', async (req, res) => {
@@ -57,6 +62,21 @@ app.post('/channels/:id/messages', async (req, res) => {
   res.status(201).json(message)
 })
 
+app.put('/channels/:id/messages/:messageId', async (req, res) => {
+  const message = await db.messages.update(req.params.id, req.params.messageId, req.body)
+  res.status(201).json(message)
+})
+
+app.delete('/channels/:id/messages/:messageId', async (req, res) => {
+  try {
+    const message = await db.messages.delete(req.params.id, req.params.messageId)
+    res.status(200).json(message)
+  } catch (err) {
+    res.status(404)
+    throw err
+  }
+})
+
 // Users
 
 app.get('/users', async (req, res) => {
@@ -66,30 +86,56 @@ app.get('/users', async (req, res) => {
 
 app.post('/users', async (req, res) => {
   const user = await db.users.create(req.body, req.user.email)
+  await db.settings.put(user.email, {mode: true, language: 'EN'})
   res.status(201).json(user)
 })
 
 app.get('/users/:id', async (req, res) => {
-  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
-  const user = await db.users.get(id)
+  const user = await db.users.get(req.params.id)
   res.json(user)
-})
-
-app.get('/users/:id/channels', async (req, res) => {
-  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
-  if(id != req.user.email) throw Error('Unauthorized')
-  const userChannels = await db.users.listChannels(id)
-  res.json(userChannels)
 })
 
 app.put('/users/:id', async (req, res) => {
-  const user = await db.users.update(req.body)
+  const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  if(email != req.user.email) throw Error('Unauthorized')
+  const user = await db.users.update(req.params.id, req.body)
   res.json(user)
+})
+
+app.delete('/users/:id', async (req, res) => {
+  const channel = await db.users.delete(req.params.id)
+  res.json(channel)
+})
+
+app.get('/users/:id/channels', async (req, res) => {
+  const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  if(email != req.user.email) throw Error('Unauthorized')
+  const userChannels = await db.users.listChannels(req.params.id)
+  res.json(userChannels)
 })
 
 app.get('/users/byname/:userName', async (req, res) => {
   const user = await db.users.getByName(req.params.userName)
   res.json(user)
+})
+
+// Users settings
+app.get('/users/:id/settings', async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const user = await db.settings.get(id)
+  res.json(user)
+})
+
+app.post('/users/:id/settings', async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const settings = await db.settings.put(id, req.body)
+  res.status(201).json(settings)
+})
+
+app.put('/users/:id/settings', async (req, res) => {
+  const id =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  const settings = await db.settings.put(id, req.body)
+  res.status(201).json(settings)
 })
 
 app.post('/test/users', async (req, res) => {
