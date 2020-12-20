@@ -22,14 +22,15 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', async (req, res) => {
-  const channels = await db.channels.list()
-  res.json(channels)
+  const userId =  Buffer.from(req.user.email, 'utf-8').toString('base64')
+  const userChannels = await db.users.listChannels(userId)
+  res.json(userChannels)
 })
 
 app.post('/channels', async (req, res) => {
   const idOwner =  Buffer.from(req.user.email, 'utf-8').toString('base64')
   const channel = await db.channels.create(req.body, idOwner)
-  await db.users.addChannel(idOwner, channel.id, true)
+  await db.users.addChannel(idOwner, channel.id)
   await Promise.all(channel.members.map((member) => {
     return db.users.addChannel(member, channel.id)
   }))
@@ -42,7 +43,7 @@ app.get('/channels/:id', async (req, res) => {
 })
 
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.body)
+  const channel = await db.channels.update(req.params.id, req.body)
   res.json(channel)
 })
 
@@ -86,7 +87,8 @@ app.get('/users', async (req, res) => {
 })
 
 app.post('/users', async (req, res) => {
-  const user = await db.users.create(req.body, req.user.email)
+  const id =  Buffer.from(req.user.email, 'utf-8').toString('base64')
+  const user = await db.users.create(req.body, id)
   await db.settings.put(user.id, {mode: true, language: 'EN'})
   res.status(201).json(user)
 })
@@ -112,6 +114,13 @@ app.get('/users/:id/channels', async (req, res) => {
   const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
   if(email != req.user.email) throw Error('Unauthorized')
   const userChannels = await db.users.listChannels(req.params.id)
+  res.json(userChannels)
+})
+
+app.delete('/users/:id/channels/:idChannel', async (req, res) => {
+  const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
+  if(email != req.user.email) throw Error('Unauthorized')
+  const userChannels = await db.users.deleteChannel(req.params.id, req.params.idChannel)
   res.json(userChannels)
 })
 
