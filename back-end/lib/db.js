@@ -42,7 +42,6 @@ module.exports = {
       const data = await db.get(`channels:${id}`)
       const original = JSON.parse(data)
       delete channel.id
-      console.log(merge(original, channel))
       await db.put(`channels:${id}`,  JSON.stringify(merge(original, channel)))
       return merge(channel, { id: id })
     },
@@ -155,7 +154,7 @@ module.exports = {
           const channel = JSON.parse(dataChannel)
           channels.push(merge(channel, { id: channelId.split(":")[1] }))
         }catch(err){
-          console.log(err)
+          return err
         }
       }))
       return channels

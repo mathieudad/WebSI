@@ -46,11 +46,11 @@ export default () => {
         })
         setChannels(channels)
       } catch (err) {
-        console.error(err)
+        history.push('/Oups')
       }
     }
     fetch()
-  }, [oauth, setChannels])
+  }, [oauth, setChannels, history])
 
   const handleCloseModification = () => {
     setOpenModification(false)
