@@ -39,6 +39,7 @@ export default () => {
   const listRef = useRef()
   const channelId = useRef()
   const [messages, setMessages] = useState([])
+  const [currentEditingMessage, setCurrentEditingMessage] = useState(null)
   const [scrollDown, setScrollDown] = useState(false)
   const addMessage = (message) => {
     fetchMessages()
@@ -79,6 +80,36 @@ export default () => {
   const onClickScroll = () => {
     listRef.current.scroll()
   }
+  const handleMessageDeletion = (event) => {
+    setMessages(messages.filter(message => message.creation !== event.currentTarget.value))
+    axios.delete(`http://localhost:3001/channels/${channel.id}/messages/${event.currentTarget.value}`, {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
+    })
+    console.log(event.currentTarget.value)
+    event.stopPropagation()
+  }
+  const handleMessageModification = async (event) => {
+    console.log(event.currentTarget.value)
+    setCurrentEditingMessage(JSON.parse(event.currentTarget.value))
+    event.stopPropagation()
+  }
+  const handleSendMessageModification = async (content) => {
+    const newMessage = currentEditingMessage
+    setCurrentEditingMessage(null)
+    if(!content) return 
+    newMessage.content = content
+    const index = messages.findIndex(message => message.creation === newMessage.creation)
+    messages[index].content = content
+    setMessages(messages)
+    axios.put(`http://localhost:3001/channels/${channel.id}/messages/${newMessage.creation}`,newMessage, {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
+    })
+    console.log(messages)
+  }
   const loading = <div>Loading...</div>
   const content = (
     <div css={styles.root}>
@@ -86,6 +117,10 @@ export default () => {
         channel={channel}
         messages={messages}
         onScrollDown={onScrollDown}
+        onDeletion={handleMessageDeletion}
+        onModification={handleMessageModification}
+        onSendModification={handleSendMessageModification}
+        currentEditingMessage={currentEditingMessage}
         ref={listRef}
       />
       <Form addMessage={addMessage} channel={channel} />
