@@ -58,19 +58,19 @@ export default ({HandleButton1, HandleButton2, HandleButton3, image, where}) => 
           alignItems="flex-end"
           spacing={1}
           wrap="nowrap">
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <div css={styles.card} >
             <GravatarIcon css={styles.icon} />
           <ResponsiveButton name='Import From your Gravatar' props = {props1}/>
             </div>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={2}>
               <div css={styles.card}>
             <AvatarIcon css={styles.icon} />
           <ResponsiveButton name ='Choose one of our Avatars' props ={props2} />
           </div>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={2}>
             <div css={styles.card}>
           <FolderIcon css={styles.icon} />
           <ResponsiveButton name='Import From Your Computer' props = {props3}/>
