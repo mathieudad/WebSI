@@ -77,6 +77,8 @@ export default ({ open, onClose, channel }) => {
   }
 
   useEffect(() => {
+    if(channel)
+      (channel.members).forEach((m, i) =>{ channel.members[i] = window.atob(m)})
     setMembers(channel ? [...channel.members] : [])
     setUsernameMember(channel ? [...channel.members] : [])
     setNameChannel(channel ? channel.name : '')
@@ -95,6 +97,7 @@ export default ({ open, onClose, channel }) => {
           'Authorization': `Bearer ${oauth.access_token}`
         }
       })
+      console.log(email)
       if (email) {
         setUsernameMember([...userNameMembers, member])
         setMembers([...members, email])
@@ -115,7 +118,7 @@ export default ({ open, onClose, channel }) => {
     onClose()
     setMember('')
     setUsernameMember([])
-    setMembers([])
+    //setMembers(channel ? channel.members : [])
     setDiagMess('Please enter the name of the channel and participants you want to chat with.')
     setSmiley(false)
   }
@@ -128,6 +131,7 @@ export default ({ open, onClose, channel }) => {
     }
     try {
       if (channel) {
+        members.forEach((m, i) =>{ members[i] = window.btoa(m)}) 
         let ch = {
           name: nameChannel,
           members: members
@@ -149,6 +153,7 @@ export default ({ open, onClose, channel }) => {
         setSmiley(false)
 
       } else {
+        members.forEach((m, i ) =>{ members[i] = window.btoa(m)}) 
         let ch = {
           name: nameChannel,
           members: members
