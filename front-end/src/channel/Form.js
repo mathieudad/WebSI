@@ -2,14 +2,12 @@ import { useState, useContext } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 import axios from 'axios';
-// Layout
 import Button from "@material-ui/core/Button"
-// import Icon from "@material-ui/core/Icon"
-import SendIcon from "@material-ui/icons/Send";
-import TextField from '@material-ui/core/TextField';
-import { useTheme } from '@material-ui/core/styles';
-// Local
-import Context from './../Context' 
+import SendIcon from "@material-ui/icons/Send"
+import TextField from '@material-ui/core/TextField'
+import { useTheme } from '@material-ui/core/styles'
+import Context from './../Context'
+
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -36,15 +34,16 @@ export default ({
   channel,
 }) => {
   const [content, setContent] = useState('')
-  const {oauth} = useContext(Context)
+  const { oauth } = useContext(Context)
   const styles = useStyles(useTheme())
+
   const onSubmit = async () => {
-    const {data: message} = await axios.post(
+    const { data: message } = await axios.post(
       `http://localhost:3001/channels/${channel.id}/messages`
-    , {
-      content: content,
-      author: oauth.user.name,
-    }, {
+      , {
+        content: content,
+        author: oauth.user.name,
+      }, {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
       }
@@ -52,9 +51,11 @@ export default ({
     addMessage(message)
     setContent('')
   }
+  
   const handleChange = (e) => {
     setContent(e.target.value)
   }
+
   return (
     <form css={styles.form} onSubmit={onSubmit} noValidate>
       <TextField
