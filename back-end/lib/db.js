@@ -42,9 +42,9 @@ module.exports = {
       const data = await db.get(`channels:${id}`)
       const original = JSON.parse(data)
       delete channel.id
-      console.log(merge(original, channel))
+      const newChannel = merge(original, channel)
       await db.put(`channels:${id}`,  JSON.stringify(merge(original, channel)))
-      return merge(channel, { id: id })
+      return merge(newChannel, { id: id })
     },
     delete: async (id) => {
       if (!id) throw Error('Invalid channel')
@@ -155,7 +155,7 @@ module.exports = {
           const channel = JSON.parse(dataChannel)
           channels.push(merge(channel, { id: channelId.split(":")[1] }))
         }catch(err){
-          console.log(err)
+          return err
         }
       }))
       return channels
@@ -163,7 +163,7 @@ module.exports = {
     deleteChannel: async (id, channelId) => {
       if (!id) throw Error('Invalid id')
       if (!channelId) throw Error('Invalid channel id')
-      //const data = await db.del(`userchannels:${id}`)
+      //const data = await db.get(`userchannels:${id}`)
       //const userChannels = JSON.parse(data)
       //return userChannels
     },

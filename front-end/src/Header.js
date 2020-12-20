@@ -88,16 +88,16 @@ export default () => {
 
   const buttonLogoutProps = {
     variant: "contained",
-    color: "#ffffff",
+    color: "default",
     onClick: onClickLogout
   }
   const buttonSettingsProps = {
     variant: "contained",
-    color: "#ffffff",
+    color: "default",
     onClick: handleSettings
   }
   const buttonHomeProps = {
-    color: "#ffffff",
+    color: "default",
     onClick: handleMenu
   }
 
