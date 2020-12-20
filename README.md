@@ -73,7 +73,7 @@ Follow the commands below to start and use our application.
 
 |   Title  |   author |   school |   period |  
 |---    |:-:    |:-:  |--:    |
-|   Final Project - ECE Chat  |  - Mathieu Dadoun <mdecampou@gmail.com> - Mathieu de Campou <mathieudadoun98@gmiail.com>   |  ECE |  Fall 2020  |
+|   Final Project - ECE Chat  |  - Mathieu Dadoun <mdecampou@gmail.com> <br/>- Mathieu de Campou <mathieudadoun98@gmiail.com>   |  ECE |  Fall 2020  |
 
 ## Tasks
 
