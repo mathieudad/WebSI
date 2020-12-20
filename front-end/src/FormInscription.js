@@ -1,27 +1,28 @@
-import { useContext, useState } from 'react';
+import { useContext, useState } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { useTheme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Context from './Context';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { ResponsiveButton } from './ResponsiveButton';
-import Photo from './icons/photo.svg';
-import { useHistory } from "react-router-dom";
-import axios from 'axios';
-import Avatar from './Avatar';
-import md5 from 'md5';
-import OurAvatarDialog from './OurAvatarsDialog';
-import beer from './icons/beer.svg';
-import kitty from './icons/kitty.svg';
-import masque from './icons/masque.svg';
-import pet from './icons/pet.svg';
-import snowM from './icons/planche-a-neige.svg';
-import snowF from './icons/planche-a-neige-F.svg';
-import DropZone from './DropZone';
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import { useTheme } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import Context from './Context'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import { ResponsiveButton } from './ResponsiveButton'
+import Photo from './icons/photo.svg'
+import { useHistory } from "react-router-dom"
+import axios from 'axios'
+import Avatar from './avatar/Avatar'
+import md5 from 'md5'
+import OurAvatarDialog from './avatar/OurAvatarsDialog'
+import beer from './icons/beer.svg'
+import kitty from './icons/kitty.svg'
+import masque from './icons/masque.svg'
+import pet from './icons/pet.svg'
+import snowM from './icons/planche-a-neige.svg'
+import snowF from './icons/planche-a-neige-F.svg'
+import DropZone from './avatar/DropZone'
+
 
 const useStyles = (theme) => ({
   root: {
@@ -45,8 +46,6 @@ const Image = ({ image, theme }) => {
   return <img alt="Welcome" src={image} css={style} />
 }
 
-
-//TODO : verifier la validité de l'username
 export default () => {
   const history = useHistory()
   const theme = useTheme()
@@ -59,34 +58,33 @@ export default () => {
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openDZ, setOpenDZ] = useState(false)
 
-
   const handleChangeUsername = (event) => {
     setUserName(event.target.value)
   }
 
   const usernameValidity = async () => {
     const regex = /[^A-Za-z0-9_-]/
-    if(regex.test(username)){ 
+    if (regex.test(username)) {
       setUserMessage('invalid character in your username (only alphanumeric characters and hyphen)')
       return false
-    }else{
-      try{
-      const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
-        headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
+    } else {
+      try {
+        const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        if (email) {
+          setUserMessage('We are sorry but an other member already use this username')
+          return false
         }
-      })
-      if (email) {
-        setUserMessage('We are sorry but an other member already use this username')
+        return true
+      } catch (err) {
+        setUserMessage('Oops an error occur try again..')
         return false
+      }
     }
-    return true
-  }catch (err) {
-    setUserMessage('Oops an error occur try again..')
-    return false
   }
-  }
-}
 
   const handleNewUser = async () => {
     if (!username || Object.is(image, Photo)) {
@@ -96,7 +94,7 @@ export default () => {
       if (Object.is(image, Photo)) {
         setImageMessage('Ohoh it looks like you forgot to choose your avatar')
       }
-    } else if(await usernameValidity()) {
+    } else if (await usernameValidity()) {
       try {
         const data = {
           name: username,
@@ -110,11 +108,11 @@ export default () => {
         })
         oauth.user = user.data
         const email64 = window.btoa(oauth.email)
-        const settings = await axios.get(`http://localhost:3001/users/${email64}/settings`,{
+        const settings = await axios.get(`http://localhost:3001/users/${email64}/settings`, {
           headers: {
             'Authorization': `Bearer ${oauth.access_token}`
           }
-        } )
+        })
         oauth.settings = settings.data
         setOauth(oauth)
         history.push('/')

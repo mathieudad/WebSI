@@ -1,8 +1,7 @@
-
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
 import { useTheme } from '@material-ui/core/styles';
+
 
 const useStyles = (theme) => ({
   root: {
@@ -12,16 +11,17 @@ const useStyles = (theme) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-  },
+  }
 })
 
 export default () => {
   const styles = useStyles(useTheme())
+
   return (
     <main css={styles.root}>
       <div>
-        An unexpected error occured, it is probably not your fault. Sorry.
+        An unexpected error has occurred, it is probably not your fault. Sorry.
       </div>
     </main>
-  );
+  )
 }

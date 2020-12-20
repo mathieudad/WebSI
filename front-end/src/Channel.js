@@ -1,12 +1,12 @@
-import {useContext, useRef, useState, useEffect} from 'react';
+import { useContext, useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import useSWR from "swr";
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
-import { useTheme } from '@material-ui/core/styles';
-import Fab from '@material-ui/core/Fab';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { useTheme } from '@material-ui/core/styles'
+import Fab from '@material-ui/core/Fab'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown'
 // Local
 import Form from './channel/Form'
 import List from './channel/List'
@@ -21,7 +21,7 @@ const useStyles = (theme) => ({
     flexDirection: 'column',
     position: 'relative',
     overflowX: 'auto',
-    backgroundColor : theme.palette.secondary.dark,
+    backgroundColor: theme.palette.secondary.dark,
   },
   fab: {
     position: 'absolute !important',
@@ -40,43 +40,44 @@ export default () => {
   const [messages, setMessages] = useState([])
   const [currentEditingMessage, setCurrentEditingMessage] = useState(null)
   const [scrollDown, setScrollDown] = useState(false)
+  const { id } = useParams()
+  const { channels, setChannels, oauth } = useContext(Context)
+  const [channel, setChannel] = useState(channels.find(channel => channel.id === id))
+
   const addMessage = () => {
     fetchMessages()
   }
-  const { id } = useParams()
-  const {channels, setChannels, oauth} = useContext(Context)
-  const [channel, setChannel] = useState(channels.find( channel => channel.id === id))
- 
-  const url = `http://localhost:3001/channels`;
+
+  const url = `http://localhost:3001/channels`
   const fetcher = (...args) => axios.get(...args, {
     headers: {
       'Authorization': `Bearer ${oauth.access_token}`
     }
   }).then((res) => {
     setChannels(res.data)
-    setChannel(res.data.find( channel => channel.id === id))
-    return  res.data
+    setChannel(res.data.find(channel => channel.id === id))
+    return res.data
   });
   const { data } = useSWR(url, fetcher);
 
   const fetchMessages = async () => {
     setMessages([])
-    const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`, {
+    const { data: messages } = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`, {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
       }
     })
     setMessages(messages)
-    if(listRef.current){
+    if (listRef.current) {
       listRef.current.scroll()
     }
   }
 
-  useEffect (() => {
-    setChannel(channels.find( channel => channel.id === id))
+  useEffect(() => {
+    setChannel(channels.find(channel => channel.id === id))
   }, [id, channels])
-  
-  if(channel && channelId.current !== channel.id){
+
+  if (channel && channelId.current !== channel.id) {
     fetchMessages()
     channelId.current = channel.id
   }
@@ -109,19 +110,19 @@ export default () => {
   const handleSendMessageModification = async (content) => {
     const newMessage = currentEditingMessage
     setCurrentEditingMessage(null)
-    if(!content) return 
+    if (!content) return
     newMessage.content = content
     const index = messages.findIndex(message => message.creation === newMessage.creation)
     messages[index].content = content
     setMessages(messages)
-    axios.put(`http://localhost:3001/channels/${channel.id}/messages/${newMessage.creation}`,newMessage, {
+    axios.put(`http://localhost:3001/channels/${channel.id}/messages/${newMessage.creation}`, newMessage, {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
       }
     })
   }
 
-  const handleCancelCurrentModification =() => {
+  const handleCancelCurrentModification = () => {
     setCurrentEditingMessage(null)
   }
 
@@ -136,7 +137,7 @@ export default () => {
         onModification={handleMessageModification}
         onSendModification={handleSendMessageModification}
         currentEditingMessage={currentEditingMessage}
-        cancelCurrentModification = {handleCancelCurrentModification} 
+        cancelCurrentModification={handleCancelCurrentModification}
         ref={listRef}
       />
       <Form addMessage={addMessage} channel={channel} />

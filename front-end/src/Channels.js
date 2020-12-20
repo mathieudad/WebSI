@@ -1,18 +1,18 @@
-import { useContext, useEffect, useState } from 'react';
-import { useTheme } from '@material-ui/core/styles';
-import axios from 'axios';
+import { useContext, useEffect, useState } from 'react'
+import { useTheme } from '@material-ui/core/styles'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
 import Link from '@material-ui/core/Link'
 // Local
 import Context from './Context'
-import { useHistory } from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import { Typography } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import IconButton from '@material-ui/core/IconButton';
-import HandleChannel from './HandleChannel';
+import { useHistory } from 'react-router-dom'
+import Grid from '@material-ui/core/Grid'
+import { Typography } from '@material-ui/core'
+import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+import IconButton from '@material-ui/core/IconButton'
+import HandleChannel from './HandleChannel'
 
 
 const useStyles = (theme) => ({
@@ -34,7 +34,7 @@ export default () => {
   } = useContext(Context)
   const history = useHistory()
   const [openModification, setOpenModification] = useState(false)
-  const  [currentChannel, setCurrentChannel] = useState()
+  const [currentChannel, setCurrentChannel] = useState()
 
   useEffect(() => {
     const fetch = async () => {
@@ -60,8 +60,6 @@ export default () => {
     setCurrentChannel(channels.find(channel => channel.id === e.currentTarget.value))
     setOpenModification(true)
   }
-
-
 
   return (
     <ul css={styles.root}>
@@ -91,5 +89,5 @@ export default () => {
         </li>
       ))}
     </ul>
-  );
+  )
 }

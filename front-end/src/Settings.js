@@ -1,30 +1,31 @@
-import { useContext, useState } from 'react';
+import { useContext, useState } from 'react'
 /** @jsx jsx */
-import { jsx } from '@emotion/core';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import { useTheme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
-import Context from './Context';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { ResponsiveButton } from './ResponsiveButton';
-import Photo from './icons/photo.svg';
-import axios from 'axios';
-import Avatar from './Avatar';
-import md5 from 'md5';
-import OurAvatarDialog from './OurAvatarsDialog';
-import beer from './icons/beer.svg';
-import kitty from './icons/kitty.svg';
-import masque from './icons/masque.svg';
-import pet from './icons/pet.svg';
-import snowM from './icons/planche-a-neige.svg';
-import snowF from './icons/planche-a-neige-F.svg';
-import DropZone from './DropZone';
-import MenuItem from '@material-ui/core/MenuItem';
-import Switch from '@material-ui/core/Switch';
-import { FormControlLabel, FormGroup } from '@material-ui/core';
-import { useHistory } from "react-router-dom";
+import { jsx } from '@emotion/core'
+import AccountCircle from '@material-ui/icons/AccountCircle'
+import InputAdornment from '@material-ui/core/InputAdornment'
+import { useTheme } from '@material-ui/core/styles'
+import TextField from '@material-ui/core/TextField'
+import Context from './Context'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import { ResponsiveButton } from './ResponsiveButton'
+import Photo from './icons/photo.svg'
+import axios from 'axios'
+import Avatar from './avatar/Avatar'
+import md5 from 'md5'
+import OurAvatarDialog from './avatar/OurAvatarsDialog'
+import beer from './icons/beer.svg'
+import kitty from './icons/kitty.svg'
+import masque from './icons/masque.svg'
+import pet from './icons/pet.svg'
+import snowM from './icons/planche-a-neige.svg'
+import snowF from './icons/planche-a-neige-F.svg'
+import DropZone from './avatar/DropZone'
+import MenuItem from '@material-ui/core/MenuItem'
+import Switch from '@material-ui/core/Switch'
+import { FormControlLabel, FormGroup } from '@material-ui/core'
+import { useHistory } from "react-router-dom"
+
 
 const useStyles = (theme) => ({
   root: {
@@ -48,7 +49,6 @@ const Image = ({ image, theme }) => {
   return <img alt="Welcome" src={image} css={style} />
 }
 
-
 const languages = [
   {
     value: 'EN',
@@ -71,7 +71,6 @@ const languages = [
   }
 ]
 
-//TODO : verifier la validité de l'username
 export default () => {
   const theme = useTheme()
   const styles = useStyles(theme)
@@ -83,14 +82,9 @@ export default () => {
   const [openAvatar, setOpenAvatar] = useState(false)
   const [openDZ, setOpenDZ] = useState(false)
   const [image, setImage] = useState(Photo)
-  //oauth.settings.language
   const [language, setLanguage] = useState(oauth && oauth.settings.language ? oauth.settings.language : null)
-  //oauth.settings.mode
   const [switchState, setSwitchState] = useState(oauth && oauth.settings.mode ? oauth.settings.mode : null)
-
-
   const [nameSwitch, setNameSwitch] = useState(oauth && oauth.settings.mode ? 'Light Mode' : 'Dark Mode')
-
 
   const checkSwitch = () => {
     if (!switchState) {
@@ -112,8 +106,6 @@ export default () => {
     setSwitchState(!switchState)
     checkSwitch()
   }
-
-
 
   const handleGravatar = async () => {
     const hashEmail = md5((oauth.email).toLowerCase())
@@ -193,35 +185,34 @@ export default () => {
     setImageMessage('Wow... what a beautiful Avatar')
   }
 
-
   const usernameValidity = async () => {
     const regex = /[^A-Za-z0-9_-]/
-    if(regex.test(username)){ 
+    if (regex.test(username)) {
       setUserMessage('invalid character in your username (only alphanumeric characters and hyphen)')
       return false
-    }else{
-      try{
-      const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
-        headers: {
-          'Authorization': `Bearer ${oauth.access_token}`
+    } else {
+      try {
+        const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        if (email) {
+          setUserMessage('We are sorry but an other member already use this username')
+          return false
         }
-      })
-      if (email) {
-        setUserMessage('We are sorry but an other member already use this username')
+        return true
+      } catch (err) {
+        setUserMessage('Oops an error occur try again..')
         return false
+      }
     }
-    return true
-  }catch(err){
-    setUserMessage('Oops an error occur try again..')
-    return false
   }
-  } 
-}
 
   const handleNewUsername = async () => {
     if (!username) {
       setUserMessage('Ohoh it looks like you forgot to enter your username')
-    } else if(await usernameValidity()) {
+    } else if (await usernameValidity()) {
       try {
         const data = {
           name: username,
@@ -266,7 +257,6 @@ export default () => {
     }
   }
 
-
   const handleNewAvatar = async () => {
     if (Object.is(image, Photo)) {
       setImageMessage('Ohoh it looks like you forgot to choose your avatar')
@@ -292,22 +282,18 @@ export default () => {
     }
   }
 
-
   const propsUsernameButton = {
     size: "large",
     variant: "contained",
     color: "primary",
     onClick: handleNewUsername
   }
-
-
   const propsSetButton = {
     size: "large",
     variant: "contained",
     color: "primary",
     onClick: handleNewSettings
   }
-
   const propsAvatarButton = {
     size: "large",
     variant: "contained",

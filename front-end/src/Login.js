@@ -1,22 +1,19 @@
-import { useContext, useEffect } from 'react';
-import { useCookies } from 'react-cookie';
+import { useContext, useEffect } from 'react'
+import { useCookies } from 'react-cookie'
 import crypto from 'crypto'
-import qs from 'qs';
-import axios from 'axios';
+import qs from 'qs'
+import axios from 'axios'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
-// Layout
-import { useTheme } from '@material-ui/core/styles';
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-// Local
+import { useTheme } from '@material-ui/core/styles'
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
 import Context from './Context'
 import { ResponsiveButton } from './ResponsiveButton'
-import {
-  useHistory
-} from "react-router-dom";
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import { ReactComponent as DiscussionIcon } from './icons/discussion.svg';
+import { useHistory } from "react-router-dom"
+import LockOpenIcon from '@material-ui/icons/LockOpen'
+import { ReactComponent as DiscussionIcon } from './icons/discussion.svg'
 import { Typography } from '@material-ui/core';
+
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -93,14 +90,10 @@ const Redirect = ({
   }
 
   return (
-
     <div css={styles.root}>
       <Typography color="primary" variant="h4">Welcome to Ece Chat sign in to see more</Typography>
-
       <DiscussionIcon css={styles.icon} />
-
       <ResponsiveButton name='Login with OpenID Connect and OAuth2' props={propsLoginButton} icon={<LockOpenIcon />} />
-
     </div>
   )
 }
@@ -108,7 +101,6 @@ const Redirect = ({
 export default () => {
   const styles = useStyles(useTheme())
   const history = useHistory()
-  // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
   const { oauth, setOauth } = useContext(Context)
   const config = {
@@ -128,7 +120,7 @@ export default () => {
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    } 
+    }
   } else { // yes: we are coming from an oauth server
     const codeVerifier = cookies.code_verifier
     useEffect(() => {
@@ -167,7 +159,6 @@ export default () => {
             data.settings = settings.data
           }
           setOauth(data)
-          // window.location = '/'
           history.push('/')
         } catch (err) {
           history.push('/Oups')
