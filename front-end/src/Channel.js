@@ -35,7 +35,7 @@ const useStyles = (theme) => ({
 export default () => {
   const history = useHistory()
   const { id } = useParams()
-  const {channels} = useContext(Context)
+  const {channels, oauth} = useContext(Context)
   const channel = channels.find( channel => channel.id === id)
   if(!channel) {
     history.push('/oups')
@@ -51,7 +51,11 @@ export default () => {
   }
   const fetchMessages = async () => {
     setMessages([])
-    const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`)
+    const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`, {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
+    })
     setMessages(messages)
     if(listRef.current){
       listRef.current.scroll()

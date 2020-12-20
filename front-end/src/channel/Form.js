@@ -1,13 +1,15 @@
-import { useState } from 'react'
-import axios from 'axios';
+import { useState, useContext } from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
+import axios from 'axios';
 // Layout
 import Button from "@material-ui/core/Button"
 // import Icon from "@material-ui/core/Icon"
 import SendIcon from "@material-ui/icons/Send";
 import TextField from '@material-ui/core/TextField';
 import { useTheme } from '@material-ui/core/styles';
+// Local
+import Context from './../Context' 
 
 const useStyles = (theme) => {
   // See https://github.com/mui-org/material-ui/blob/next/packages/material-ui/src/OutlinedInput/OutlinedInput.js
@@ -34,6 +36,7 @@ export default ({
   channel,
 }) => {
   const [content, setContent] = useState('')
+  const {oauth} = useContext(Context)
   const styles = useStyles(useTheme())
   const onSubmit = async () => {
     const {data: message} = await axios.post(
@@ -41,6 +44,10 @@ export default ({
     , {
       content: content,
       author: 'david',
+    }, {
+      headers: {
+        'Authorization': `Bearer ${oauth.access_token}`
+      }
     })
     addMessage(message)
     setContent('')
