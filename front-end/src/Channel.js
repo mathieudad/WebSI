@@ -1,4 +1,4 @@
-import {useContext, useRef, useState} from 'react';
+import {useContext, useRef, useState, useEffect} from 'react';
 import axios from 'axios';
 import useSWR from "swr";
 /** @jsx jsx */
@@ -11,7 +11,7 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import Form from './channel/Form'
 import List from './channel/List'
 import Context from './Context'
-import { useHistory, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 const useStyles = (theme) => ({
   root: {
@@ -34,19 +34,19 @@ const useStyles = (theme) => ({
 })
 
 export default () => {
-  const history = useHistory()
   const styles = useStyles(useTheme())
   const listRef = useRef()
   const channelId = useRef()
   const [messages, setMessages] = useState([])
   const [currentEditingMessage, setCurrentEditingMessage] = useState(null)
   const [scrollDown, setScrollDown] = useState(false)
-  const addMessage = (message) => {
+  const addMessage = () => {
     fetchMessages()
   }
   const { id } = useParams()
   const {channels, setChannels, oauth} = useContext(Context)
   const [channel, setChannel] = useState(channels.find( channel => channel.id === id))
+ 
   const url = `http://localhost:3001/channels`;
   const fetcher = (...args) => axios.get(...args, {
     headers: {
@@ -57,7 +57,8 @@ export default () => {
     setChannel(res.data.find( channel => channel.id === id))
     return  res.data
   });
-  const { data, error } = useSWR(url, fetcher);
+  const { data } = useSWR(url, fetcher);
+
   const fetchMessages = async () => {
     setMessages([])
     const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`, {
@@ -70,16 +71,24 @@ export default () => {
       listRef.current.scroll()
     }
   }
+
+  useEffect (() => {
+    setChannel(channels.find( channel => channel.id === id))
+  }, [id, channels])
+  
   if(channel && channelId.current !== channel.id){
     fetchMessages()
     channelId.current = channel.id
   }
+
   const onScrollDown = (scrollDown) => {
     setScrollDown(scrollDown)
   }
+
   const onClickScroll = () => {
     listRef.current.scroll()
   }
+
   const handleMessageDeletion = (event) => {
     setMessages(messages.filter(message => message.creation !== event.currentTarget.value))
     axios.delete(`http://localhost:3001/channels/${channel.id}/messages/${event.currentTarget.value}`, {
@@ -90,11 +99,13 @@ export default () => {
     console.log(event.currentTarget.value)
     event.stopPropagation()
   }
+
   const handleMessageModification = async (event) => {
     console.log(event.currentTarget.value)
     setCurrentEditingMessage(JSON.parse(event.currentTarget.value))
     event.stopPropagation()
   }
+
   const handleSendMessageModification = async (content) => {
     const newMessage = currentEditingMessage
     setCurrentEditingMessage(null)
@@ -108,8 +119,12 @@ export default () => {
         'Authorization': `Bearer ${oauth.access_token}`
       }
     })
-    console.log(messages)
   }
+
+  const handleCancelCurrentModification =() => {
+    setCurrentEditingMessage(null)
+  }
+
   const loading = <div>Loading...</div>
   const content = (
     <div css={styles.root}>
@@ -121,6 +136,7 @@ export default () => {
         onModification={handleMessageModification}
         onSendModification={handleSendMessageModification}
         currentEditingMessage={currentEditingMessage}
+        cancelCurrentModification = {handleCancelCurrentModification} 
         ref={listRef}
       />
       <Form addMessage={addMessage} channel={channel} />

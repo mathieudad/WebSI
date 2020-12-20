@@ -1,3 +1,4 @@
+import React from 'react'
 import {forwardRef, useImperativeHandle, useLayoutEffect, useRef, useState} from 'react'
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
@@ -17,6 +18,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import CheckIcon from '@material-ui/icons/Check';
 import { FormControl, IconButton, InputLabel, OutlinedInput } from '@material-ui/core';
+import ClearIcon from '@material-ui/icons/Clear';
 
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
@@ -67,7 +69,8 @@ export default forwardRef(({
   onModification,
   onSendModification,
   onDeletion,
-  currentEditingMessage
+  currentEditingMessage,
+  cancelCurrentModification
 }, ref) => {
   const styles = useStyles(useTheme())
   // Expose the `scroll` action
@@ -122,18 +125,21 @@ export default forwardRef(({
                   <span>{message.author}</span>
                   {' - '}
                   <span>{dayjs().calendar(message.creation)}</span>
+                  <IconButton size='small' color='secondary' onClick={onDeletion} value={message.creation}>
+                    <DeleteForeverIcon/>
+                  </IconButton>
                   {
                     isEditing
-                    ? <IconButton size='small' color='secondary' onClick={handleSendMessageModification} value={editingMessageContent}>
+                    ? <React.Fragment><IconButton size='small' color='secondary' onClick={handleSendMessageModification} value={editingMessageContent}>
                         <CheckIcon/>
                       </IconButton>
+                        <IconButton size='small' color='secondary' onClick={cancelCurrentModification} value={editingMessageContent}>
+                        <ClearIcon/>
+                      </IconButton></React.Fragment>
                     : <IconButton size='small' color='secondary' onClick={onModification} value={JSON.stringify(message)}>
                         <CreateIcon/>
                       </IconButton>
                     }
-                  <IconButton size='small' color='secondary' onClick={onDeletion} value={message.creation}>
-                    <DeleteForeverIcon/>
-                  </IconButton>
                 </p>
                 {
                   isEditing
