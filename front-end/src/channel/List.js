@@ -12,6 +12,12 @@ import html from 'rehype-stringify'
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar'
 import updateLocale from 'dayjs/plugin/updateLocale'
+//Material UI
+import CreateIcon from '@material-ui/icons/Create';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { ResponsiveIconButton } from './../ResponsiveButton';
+import IconButton from '@material-ui/core/IconButton';
+
 dayjs.extend(calendar)
 dayjs.extend(updateLocale)
 dayjs.updateLocale('en', {
@@ -86,6 +92,12 @@ export default forwardRef(({
     rootNode.addEventListener('scroll', handleScroll)
     return () => rootNode.removeEventListener('scroll', handleScroll)
   })
+  const handleModification = () => {
+    console.log('modification')
+  }
+  const handleDeletion = () => {
+    console.log('Deletion')
+  }
   return (
     <div css={styles.root} ref={rootEl}>
       <h1>Messages for {channel.name}</h1>
@@ -102,6 +114,12 @@ export default forwardRef(({
                   <span>{message.author}</span>
                   {' - '}
                   <span>{dayjs().calendar(message.creation)}</span>
+                  <IconButton size='small' color='secondary' onClick={handleDeletion}>
+                    <CreateIcon/>
+                  </IconButton>
+                  <IconButton size='small' color='secondary' onClick={handleModification}>
+                    <DeleteForeverIcon/>
+                  </IconButton>
                 </p>
                 <div dangerouslySetInnerHTML={{__html: content}}>
                 </div>

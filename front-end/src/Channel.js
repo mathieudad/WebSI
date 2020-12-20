@@ -1,5 +1,6 @@
 import {useContext, useRef, useState} from 'react';
 import axios from 'axios';
+import useSWR from "swr";
 /** @jsx jsx */
 import { jsx } from '@emotion/core'
 // Layout
@@ -34,13 +35,6 @@ const useStyles = (theme) => ({
 
 export default () => {
   const history = useHistory()
-  const { id } = useParams()
-  const {channels, oauth} = useContext(Context)
-  const channel = channels.find( channel => channel.id === id)
-  if(!channel) {
-    history.push('/oups')
-    return <div/>
-  }
   const styles = useStyles(useTheme())
   const listRef = useRef()
   const channelId = useRef()
@@ -49,6 +43,20 @@ export default () => {
   const addMessage = (message) => {
     fetchMessages()
   }
+  const { id } = useParams()
+  const {channels, setChannels, oauth} = useContext(Context)
+  const [channel, setChannel] = useState(channels.find( channel => channel.id === id))
+  const url = `http://localhost:3001/channels`;
+  const fetcher = (...args) => axios.get(...args, {
+    headers: {
+      'Authorization': `Bearer ${oauth.access_token}`
+    }
+  }).then((res) => {
+    setChannels(res.data)
+    setChannel(res.data.find( channel => channel.id === id))
+    return  res.data
+  });
+  const { data, error } = useSWR(url, fetcher);
   const fetchMessages = async () => {
     setMessages([])
     const {data: messages} = await axios.get(`http://localhost:3001/channels/${channel.id}/messages`, {
@@ -61,7 +69,7 @@ export default () => {
       listRef.current.scroll()
     }
   }
-  if(channelId.current !== channel.id){
+  if(channel && channelId.current !== channel.id){
     fetchMessages()
     channelId.current = channel.id
   }
@@ -71,7 +79,8 @@ export default () => {
   const onClickScroll = () => {
     listRef.current.scroll()
   }
-  return (
+  const loading = <div>Loading...</div>
+  const content = (
     <div css={styles.root}>
       <List
         channel={channel}
@@ -89,5 +98,6 @@ export default () => {
         <ArrowDropDownIcon />
       </Fab>
     </div>
-  );
+  )
+  return data && channel ? content : loading
 }

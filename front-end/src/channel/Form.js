@@ -43,7 +43,7 @@ export default ({
       `http://localhost:3001/channels/${channel.id}/messages`
     , {
       content: content,
-      author: 'david',
+      author: oauth.user.name,
     }, {
       headers: {
         'Authorization': `Bearer ${oauth.access_token}`
