@@ -182,8 +182,9 @@ module.exports = {
       const data = await db.get(`users:${id}`)
       const original = JSON.parse(data)
       delete user.id
-      await db.put(`users:${id}`, JSON.stringify(merge(original, user)))
-      return merge(user, { id: id })
+      const newUser = merge(original, user)
+      await db.put(`users:${id}`, JSON.stringify(merge(original, newUser)))
+      return merge(newUser, { id: id })
     },
     delete: async (id) => {
       if (!id) throw Error('Invalid user id')
