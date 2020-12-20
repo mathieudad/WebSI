@@ -39,10 +39,11 @@ module.exports = {
     },
     update: async (id, channel) => {
       if (!id) throw Error('Invalid channel id')
-      const original = db.get(id)
-      if (!original) throw Error('Unregistered channel id')
+      const data = await db.get(`channels:${id}`)
+      const original = JSON.parse(data)
       delete channel.id
-      await db.put(id, merge(channel, original))
+      console.log(merge(original, channel))
+      await db.put(`channels:${id}`,  JSON.stringify(merge(original, channel)))
       return merge(channel, { id: id })
     },
     delete: async (id) => {
@@ -107,12 +108,11 @@ module.exports = {
     },
   },
   users: {
-    create: async (user, email) => {
+    create: async (user, id) => {
       if (!user.name) throw Error('Invalid user')
-      if (!email) throw Error('Invalid email')
-      const id = Buffer.from(email, 'utf-8').toString('base64')
+      if (!id) throw Error('Invalid id')
       await db.put(`users:${id}`, JSON.stringify(user))
-      await db.put(`userchannels:${id}`, JSON.stringify({ owned: [], guest: [] }))
+      await db.put(`userchannels:${id}`, JSON.stringify([]))
       await db.put(`usernames:${user.name}`, id)
       return merge(user, { id:  id})
     },
@@ -138,28 +138,34 @@ module.exports = {
         return null
       }
     },
-    addChannel: async (id, idChannel, isAdmin = false) => {
+    addChannel: async (id, idChannel) => {
       if (!id || !idChannel) throw Error('Invalid id')
       const data = await db.get(`userchannels:${id}`)
       let userChannels = JSON.parse(data)
-      if (isAdmin) {
-        if (!userChannels.owned) {
-          userChannels.owned = []
-        }
-        userChannels.owned = [...userChannels.owned, `channels:${idChannel}`]
-      } else {
-        if (!userChannels.guest) {
-          userChannels.guest = []
-        }
-        userChannels.guest = [...userChannels.guest, `channels:${idChannel}`]
-      }
-      return db.put(`userchannels:${id}`, JSON.stringify(userChannels))
+      return db.put(`userchannels:${id}`, JSON.stringify([...userChannels, `channels:${idChannel}`]))
     },
     listChannels: async (id) => {
       if (!id) throw Error('Invalid id')
       const data = await db.get(`userchannels:${id}`)
-      const userChannels = JSON.parse(data)
-      return userChannels
+      const channelsIds = JSON.parse(data)
+      const channels = []
+      await Promise.all(channelsIds.map(async channelId => {
+        try{
+          const dataChannel = await db.get(channelId)
+          const channel = JSON.parse(dataChannel)
+          channels.push(merge(channel, { id: channelId.split(":")[1] }))
+        }catch(err){
+          console.log(err)
+        }
+      }))
+      return channels
+    },
+    deleteChannel: async (id, channelId) => {
+      if (!id) throw Error('Invalid id')
+      if (!channelId) throw Error('Invalid channel id')
+      //const data = await db.del(`userchannels:${id}`)
+      //const userChannels = JSON.parse(data)
+      //return userChannels
     },
     list: async () => {
       return new Promise((resolve, reject) => {
