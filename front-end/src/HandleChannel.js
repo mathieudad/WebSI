@@ -201,7 +201,6 @@ export default ({ open, onClose, channel }) => {
       setSmiley(false)
 
     } catch (err) {
-      console.log(err)
       setDiagMess('Oops an error occur please try again ')
       setSmiley(true)
     }
@@ -223,7 +222,6 @@ export default ({ open, onClose, channel }) => {
       setSmiley(false)
 
     } catch (err) {
-      console.log(err)
       setDiagMess('Oops an error occur please try again ')
       setSmiley(true)
     }
