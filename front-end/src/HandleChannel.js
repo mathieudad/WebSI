@@ -127,25 +127,48 @@ export default ({ open, onClose, channel }) => {
       return
     }
     try {
-      let channel = {
-        name: nameChannel,
-        members: members
-      }
-      const res = await axios.post('http://localhost:3001/channels', channel, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${oauth.access_token}`
+      if (channel) {
+        let ch = {
+          name: nameChannel,
+          members: members
         }
-      })
-      setChannels([...channels, res.data])
-      onClose()
-      setDiagMess('Please enter the name of the channel and participants you want to chat with.')
-      setMembers([])
-      setUsernameMember([])
-      setMember('')
-      setSmiley(false)
+        const res = await axios.put(`http://localhost:3001/channels/${channel.id}`, ch, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        let i = channels.indexOf(channel)
+        channels[i] = res.data
+        setChannels(channels)
+        onClose()
+        setDiagMess('Please enter the name of the channel and participants you want to chat with.')
+        setMembers([])
+        setUsernameMember([])
+        setMember('')
+        setSmiley(false)
 
-    } catch (err) {
+      } else {
+        let ch = {
+          name: nameChannel,
+          members: members
+        }
+        const res = await axios.post('http://localhost:3001/channels', ch, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        })
+        setChannels([...channels, res.data])
+        onClose()
+        setDiagMess('Please enter the name of the channel and participants you want to chat with.')
+        setMembers([])
+        setUsernameMember([])
+        setMember('')
+        setSmiley(false)
+      }
+    }
+    catch (err) {
       setDiagMess('Oops an error occur please try again ')
       setSmiley(true)
     }
@@ -198,7 +221,7 @@ export default ({ open, onClose, channel }) => {
       setUsernameMember([])
       setMember('')
       setSmiley(false)
-      
+
     } catch (err) {
       console.log(err)
       setDiagMess('Oops an error occur please try again ')
