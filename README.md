@@ -113,7 +113,7 @@ Application development
 * Message removal   
   *You can remove all the messages you send, this one will be delete from the database, any members of the channel won't be able to see it anymore, lost forever... (trash icon)*
 * Account settings   
-  *You can manage your settings by clicking on the button from the welcome screen or by clicking on the gear icon (top right of the screen). Inside the settings app you have the choose: modify username, language, dark or light mode, avatar.*
+  *You can manage your settings by clicking on the button from the welcome screen or by clicking on the gear icon (top right of the screen). Inside the settings app you have the choose: modify username, language, dark or light mode, avatar(for the avatar refresh to see the result).*
 * Gravatar integration   
   *You can choose your gravatar during first sign in, or you can add it when you are in the account setting inside the application, if you have no gravatar it will import the default gravatar*
 * Avatar selection
