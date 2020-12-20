@@ -63,14 +63,11 @@ export default () => {
           direction="row"
           justify="flex-start"
           alignItems="center">
-          <Grid item>
-            <img alt="avatar" src={data.avatar} heigh="50%" width="50%" />
-          </Grid>
-          <Grid item>
+            <img alt="avatar" src={data.avatar} heigh="40%" width="40%" />
+          
             <Typography color="textPrimary" variant="h5">
               {oauth.user.name}
             </Typography>
-          </Grid>
         </Grid>
       </div>) : null)
   }
