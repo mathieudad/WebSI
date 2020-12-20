@@ -8,7 +8,6 @@ import { jsx } from '@emotion/core'
 // Layout
 import { useTheme } from '@material-ui/core/styles';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import Link from '@material-ui/core/Link'
 // Local
 import Context from './Context'
 import { ResponsiveButton } from './ResponsiveButton'
@@ -96,7 +95,7 @@ const Redirect = ({
   return (
 
     <div css={styles.root}>
-      <Typography color="primary" variant="h4">Welcome to Ece Chat sign you to see more</Typography>
+      <Typography color="primary" variant="h4">Welcome to Ece Chat sign in to see more</Typography>
 
       <DiscussionIcon css={styles.icon} />
 
@@ -105,26 +104,6 @@ const Redirect = ({
     </div>
   )
 }
-
-const Tokens = ({
-  oauth
-}) => {
-  const { setOauth } = useContext(Context)
-  const styles = useStyles(useTheme())
-  const { id_token } = oauth
-  const id_payload = id_token.split('.')[1]
-  const { email } = JSON.parse(atob(id_payload))
-  const logout = (e) => {
-    e.stopPropagation()
-    setOauth(null)
-  }
-  return (
-    <div css={styles.root}>
-      Welcome {email} <Link onClick={logout} color="secondary">logout</Link>
-    </div>
-  )
-}
-
 
 export default () => {
   const styles = useStyles(useTheme())
@@ -149,11 +128,7 @@ export default () => {
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    } else { // yes: user is already logged in, great, is is working
-      return (
-        <Tokens oauth={oauth} css={styles.root} />
-      )
-    }
+    } 
   } else { // yes: we are coming from an oauth server
     const codeVerifier = cookies.code_verifier
     useEffect(() => {
@@ -201,7 +176,7 @@ export default () => {
       fetch()
     })
     return (
-      <div css={styles.root}>Loading ... <HourglassEmptyIcon/></div>
+      <div css={styles.root}>Loading ... <HourglassEmptyIcon /></div>
     )
   }
 }
