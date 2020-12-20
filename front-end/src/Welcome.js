@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import {ReactComponent as ChannelIcon} from './icons/channel.svg';
 import {ReactComponent as SettingsIcon} from './icons/settings.svg';
 import AddIcon from '@material-ui/icons/Add';
-import CreateChannel from './CreateChannel';
+import HandleChannel from './HandleChannel';
 import {ResponsiveButton} from './ResponsiveButton';
 import {
   useHistory
@@ -47,6 +47,7 @@ export default () => {
   const handleCloseNewChannel = () => {
     setOpenNewChannel(false);
   }
+
   const handleOpenSettings = () => {
     history.push('/settings')
   }
@@ -75,7 +76,7 @@ const propsSettingsButton = {
           <div css={styles.card}>
             <ChannelIcon css={styles.icon} />
        <ResponsiveButton name= {'Create a Channel'} props = {propsChannelButton} icon={<AddIcon/>}/>
-      <CreateChannel open={openNewChannel} onClose= {handleCloseNewChannel} aria-labelledby="form-dialog-title"/>
+      <HandleChannel open={openNewChannel} onClose= {handleCloseNewChannel} aria-labelledby="form-dialog-title"/>
           </div>
         </Grid>
         <Grid item xs>
