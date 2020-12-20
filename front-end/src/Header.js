@@ -46,7 +46,7 @@ export default () => {
     oauth, setOauth,
     drawerVisible, setDrawerVisible
   } = useContext(Context)
-  if (oauth) {
+  if (oauth && oauth.user) {
     const email64 = window.btoa(oauth.email)
     const url = `http://localhost:3001/users/${email64}`;
 

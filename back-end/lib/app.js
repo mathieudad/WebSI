@@ -27,8 +27,9 @@ app.get('/channels', async (req, res) => {
 })
 
 app.post('/channels', async (req, res) => {
-  const channel = await db.channels.create(req.body, req.user.email)
-  await db.users.addChannel(req.user.email, channel.id, true)
+  const idOwner =  Buffer.from(req.user.email, 'utf-8').toString('base64')
+  const channel = await db.channels.create(req.body, idOwner)
+  await db.users.addChannel(idOwner, channel.id, true)
   await Promise.all(channel.members.map((member) => {
     return db.users.addChannel(member, channel.id)
   }))

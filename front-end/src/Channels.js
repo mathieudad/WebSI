@@ -9,10 +9,11 @@ import { useTheme } from '@material-ui/core/styles';
 // Local
 import Context from './Context'
 import {useHistory} from 'react-router-dom'
+import { Typography } from '@material-ui/core';
 
 const useStyles = (theme) => ({
  root: {
-    backgroundColor : theme.palette.primary.dark,
+    backgroundColor : theme.palette.secondary.light,
     minWidth: '200px',
   },
   channel: {

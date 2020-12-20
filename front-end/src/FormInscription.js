@@ -86,6 +86,13 @@ export default () => {
           }
         })
         oauth.user = user.data
+        const email64 = window.btoa(oauth.email)
+        const settings = await axios.get(`http://localhost:3001/users/${email64}/settings`,{
+          headers: {
+            'Authorization': `Bearer ${oauth.access_token}`
+          }
+        } )
+        oauth.settings = settings.data
         setOauth(oauth)
         history.push('/')
       } catch (err) {

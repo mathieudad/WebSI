@@ -82,13 +82,12 @@ export default () => {
   const [openDZ, setOpenDZ] = useState(false)
   const [image, setImage] = useState(Photo)
   //oauth.settings.language
-  const [language, setLanguage] = useState('FR')
+  const [language, setLanguage] = useState(oauth && oauth.settings.language ? oauth.settings.language : null)
   //oauth.settings.mode
-  const [switchState, setSwitchState] = useState(false)
+  const [switchState, setSwitchState] = useState(oauth && oauth.settings.mode ? oauth.settings.mode : null)
 
-  const a = false
 
-  const [nameSwitch, setNameSwitch] = useState(a ? 'Light Mode' : 'Dark Mode')
+  const [nameSwitch, setNameSwitch] = useState(oauth && oauth.settings.mode ? 'Light Mode' : 'Dark Mode')
 
 
   const checkSwitch = () => {
@@ -200,28 +199,31 @@ export default () => {
         const data = {
           name: username,
         }
-        const user = await axios.post('http://localhost:3001/users', data, {
+        const email64 = window.btoa(oauth.email)
+        const user = await axios.put(`http://localhost:3001/users/${email64}`, data, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${oauth.access_token}`
           }
         })
+        console.log(user)
         oauth.user = user.data
         setOauth(oauth)
+        setUserMessage('Username updated')
       } catch (err) {
         setUserMessage('Oops an error occur try again..')
       }
     }
   }
 
-  const handleNewSettings = async () =>{
+  const handleNewSettings = async () => {
     try {
       const data = {
-        language : language,
-        mode : switchState
+        language: language,
+        mode: switchState
       }
-
-      const settings = await axios.post('http://localhost:3001/settings', data, {
+      const email64 = window.btoa(oauth.email)
+      const settings = await axios.post(`http://localhost:3001/users/${email64}/settings`, data, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${oauth.access_token}`
@@ -229,6 +231,7 @@ export default () => {
       })
       oauth.settings = settings.data
       setOauth(oauth)
+      setUserMessage('Settings updated')
     } catch (err) {
       setUserMessage('Oops an error occur try again..')
     }
@@ -243,13 +246,14 @@ export default () => {
         const data = {
           avatar: image
         }
-
-        const user = await axios.post('http://localhost:3001/users', data, {
+        const email64 = window.btoa(oauth.email)
+        const user = await axios.put(`http://localhost:3001/users/${email64}`, data, {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${oauth.access_token}`
           }
         })
+        setImageMessage('Avatar updated!')
         oauth.user = user.data
         setOauth(oauth)
       } catch (err) {
@@ -258,12 +262,6 @@ export default () => {
     }
   }
 
-  const propsButton = {
-    size: "large",
-    variant: "contained",
-    color: "primary",
-    onClick: handleNewAvatar
-  }
 
   const propsUsernameButton = {
     size: "large",
@@ -272,11 +270,19 @@ export default () => {
     onClick: handleNewUsername
   }
 
-  const propsSetButton ={
+
+  const propsSetButton = {
     size: "large",
     variant: "contained",
     color: "primary",
     onClick: handleNewSettings
+  }
+
+  const propsAvatarButton = {
+    size: "large",
+    variant: "contained",
+    color: "primary",
+    onClick: handleNewAvatar
   }
 
   return (
@@ -321,44 +327,44 @@ export default () => {
             </Grid>
           </Grid>
         </div>
-        <div> 
+        <div>
           <Grid container
-          direction="row"
-          justify="center"
-          alignItems="flex-start"
-          spacing = {2}>
+            direction="row"
+            justify="center"
+            alignItems="flex-start"
+            spacing={2}>
             <Grid item >
-          <TextField
-          select
-          label="Select"
-          variant="outlined"
-          value={language}
-          onChange={handleChangeLanguage}
-          helperText="Please select your language"
-        >
-          {languages.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </TextField>
-        </Grid>
-        <Grid item>
-          <FormGroup row>
-            <FormControlLabel
-              control={<Switch
-                checked={switchState}
-                onChange={handleChangeSwitch}
-                label={nameSwitch}
-                color="primary"
-              />}
-              label={nameSwitch}
-              labelPlacement="start" />
-          </FormGroup>
-          </Grid>
-          <Grid item>
-            <ResponsiveButton name="send Settings" props={propsSetButton}/>
-          </Grid>
+              <TextField
+                select
+                label="Select"
+                variant="outlined"
+                value={language}
+                onChange={handleChangeLanguage}
+                helperText="Please select your language"
+              >
+                {languages.map((option) => (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item>
+              <FormGroup row>
+                <FormControlLabel
+                  control={<Switch
+                    checked={switchState}
+                    onChange={handleChangeSwitch}
+                    label={nameSwitch}
+                    color="primary"
+                  />}
+                  label={nameSwitch}
+                  labelPlacement="start" />
+              </FormGroup>
+            </Grid>
+            <Grid item>
+              <ResponsiveButton name="send Settings" props={propsSetButton} />
+            </Grid>
           </Grid>
         </div>
         <Avatar HandleButton1={handleGravatar} HandleButton2={handleOurAvatar} HandleButton3={handleDropZoneAvatar} />
@@ -368,7 +374,7 @@ export default () => {
           {imageMessage}
         </Typography>
         <Image image={image} theme={theme} />
-        <ResponsiveButton name={'Send new avatar'} props={propsButton} />
+        <ResponsiveButton name={'Send new avatar'} props={propsAvatarButton} />
       </Grid>
     </div>
   )
