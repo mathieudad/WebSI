@@ -1,4 +1,4 @@
-import { useContext, useEffect} from 'react';
+import { useContext, useEffect } from 'react';
 import { useCookies } from 'react-cookie';
 import crypto from 'crypto'
 import qs from 'qs';
@@ -7,12 +7,17 @@ import axios from 'axios';
 import { jsx } from '@emotion/core'
 // Layout
 import { useTheme } from '@material-ui/core/styles';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import Link from '@material-ui/core/Link'
 // Local
 import Context from './Context'
+import { ResponsiveButton } from './ResponsiveButton'
 import {
   useHistory
 } from "react-router-dom";
+import LockOpenIcon from '@material-ui/icons/LockOpen';
+import { ReactComponent as DiscussionIcon } from './icons/discussion.svg';
+import { Typography } from '@material-ui/core';
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -31,8 +36,9 @@ const sha256 = (buffer) => {
 const useStyles = (theme) => ({
   root: {
     flex: '1 1 auto',
-    background: theme.palette.secondary.dark,
+    background: theme.palette.secondary.main,
     display: 'flex',
+    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     '& > div': {
@@ -47,6 +53,17 @@ const useStyles = (theme) => ({
         display: 'block',
       },
     },
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      textAlign: 'center',
+    },
+    icon: {
+      width: '30%',
+      fill: '#fff',
+      marginBottom: '10px',
+    }
   },
 })
 
@@ -69,9 +86,22 @@ const Redirect = ({
     ].join('')
     window.location = url
   }
+
+  const propsLoginButton = {
+    variant: "contained",
+    color: "primary",
+    onClick: redirect
+  }
+
   return (
+
     <div css={styles.root}>
-      <Link onClick={redirect} color="secondary">Login with OpenID Connect and OAuth2</Link>
+      <Typography color="primary" variant="h4">Welcome to Ece Chat sign you to see more</Typography>
+
+      <DiscussionIcon css={styles.icon} />
+
+      <ResponsiveButton name='Login with OpenID Connect and OAuth2' props={propsLoginButton} icon={<LockOpenIcon />} />
+
     </div>
   )
 }
@@ -79,11 +109,11 @@ const Redirect = ({
 const Tokens = ({
   oauth
 }) => {
-  const {setOauth} = useContext(Context)
+  const { setOauth } = useContext(Context)
   const styles = useStyles(useTheme())
-  const {id_token} = oauth
+  const { id_token } = oauth
   const id_payload = id_token.split('.')[1]
-  const {email} = JSON.parse(atob(id_payload))
+  const { email } = JSON.parse(atob(id_payload))
   const logout = (e) => {
     e.stopPropagation()
     setOauth(null)
@@ -101,7 +131,7 @@ export default () => {
   const history = useHistory()
   // const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies([]);
-  const {oauth, setOauth} = useContext(Context)
+  const { oauth, setOauth } = useContext(Context)
   const config = {
     authorization_endpoint: 'http://127.0.0.1:5556/dex/auth',
     token_endpoint: 'http://127.0.0.1:5556/dex/token',
@@ -112,32 +142,32 @@ export default () => {
   const params = new URLSearchParams(window.location.search)
   const code = params.get('code')
   // is there a code query parameters in the url 
-  if(!code){ // no: we are not being redirected from an oauth server
-    if(!oauth){
+  if (!code) { // no: we are not being redirected from an oauth server
+    if (!oauth) {
       const codeVerifier = base64URLEncode(crypto.randomBytes(32))
       setCookie('code_verifier', codeVerifier)
       return (
         <Redirect codeVerifier={codeVerifier} config={config} css={styles.root} />
       )
-    }else{ // yes: user is already logged in, great, is is working
+    } else { // yes: user is already logged in, great, is is working
       return (
         <Tokens oauth={oauth} css={styles.root} />
       )
     }
-  }else{ // yes: we are coming from an oauth server
+  } else { // yes: we are coming from an oauth server
     const codeVerifier = cookies.code_verifier
-    useEffect( () => {
+    useEffect(() => {
       const fetch = async () => {
         try {
-          const {data} = await axios.post(
+          const { data } = await axios.post(
             config.token_endpoint
-          , qs.stringify ({
-            grant_type: 'authorization_code',
-            client_id: `${config.client_id}`,
-            code_verifier: `${codeVerifier}`,
-            redirect_uri: `${config.redirect_uri}`,
-            code: `${code}`,
-          }))
+            , qs.stringify({
+              grant_type: 'authorization_code',
+              client_id: `${config.client_id}`,
+              code_verifier: `${codeVerifier}`,
+              redirect_uri: `${config.redirect_uri}`,
+              code: `${code}`,
+            }))
           removeCookie('code_verifier')
           const email = JSON.parse(
             Buffer.from(
@@ -146,24 +176,32 @@ export default () => {
           ).email
           data.email = email
           const email64 = window.btoa(email)
-          const res = await axios.get(`http://localhost:3001/users/${email64}`,{headers: {
-            'Authorization': `Bearer ${data.access_token}`
-           }})
+          const res = await axios.get(`http://localhost:3001/users/${email64}`, {
+            headers: {
+              'Authorization': `Bearer ${data.access_token}`
+            }
+          })
           const user = res.data
-          if(user){
+          if (user) {
             data.user = user
+            const settings = await axios.get(`http://localhost:3001/users/${email64}/settings`, {
+              headers: {
+                'Authorization': `Bearer ${data.access_token}`
+              }
+            })
+            data.settings = settings.data
           }
           setOauth(data)
           // window.location = '/'
           history.push('/')
-        }catch (err) {
+        } catch (err) {
           history.push('/Oups')
         }
       }
       fetch()
     })
     return (
-      <div css={styles.root}>Loading tokens</div>
+      <div css={styles.root}>Loading ... <HourglassEmptyIcon/></div>
     )
   }
 }
