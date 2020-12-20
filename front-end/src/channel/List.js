@@ -137,7 +137,6 @@ export default forwardRef(({
               <p>
                 <span>{message.author}</span>
                 {' - '}
-                {console.log(message.creation)}
                 <span>{timeConverter(parseInt(message.creation))}</span>
                 <IconButton size='small' color='secondary' onClick={onDeletion} value={message.creation}>
                   <DeleteForeverIcon />

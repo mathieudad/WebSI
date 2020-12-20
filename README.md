@@ -1,7 +1,12 @@
 
-# Chat application - final project
+# Ece Chat application - final project
 
 *presentation, introduction, ...*
+
+This is the source code supporting our application "Ece Chat". A messenger application where, after logging in with github, you can communicate with all your friends, by creating channels and invite them to join it so you would be able to communicate in the best conditions.
+It contains all information you have to know about our achievements and what could be improve.
+Our source code already contains the dex server folder, necessary for the Oauth2 connection and obviously back end and front end folders. 
+Follow the commands below to start and use our application.
 
 ## Usage
 
@@ -9,8 +14,8 @@
 
 * Clone this repository, from your local machine:
   ```
-  git clone https://github.com/adaltas/ece-2020-fall-webtech-project.git webtech
-  cd webtech
+  git clone https://github.com/mathieudad/WebSI.git
+  cd WebSI
   ```
 * Install [Go](https://golang.org/) and [Dex](https://dexidp.io/docs/getting-started/). For example, on Ubuntu, from your project root directory:   
   ```
@@ -58,49 +63,57 @@
   yarn start
   ```
 
+* Start the hole application with the launcher
+  ```bash
+  #Install all dependencies and start front/back-end dex Server
+  ./launcher
+  ```
+
 ## Author
 
-*name, email, ...*
+|   Title  |   author |   school |   period |  
+|---    |:-:    |:-:  |--:    |
+|   Final Project - ECE Chat  |  - Mathieu Dadoun <mdecampou@gmail.com> - Mathieu de Campou <mathieudadoun98@gmiail.com>   |  ECE |  Fall 2020  |
 
 ## Tasks
 
 Project management
 
 * Naming convention   
-  *place your comments*
+  *variable named uppercase convention, tried to be as meaningful as possible*
 * Project structure   
-  *place your comments*
+  *3 main folders : front-end back-end dex-server*
 * Code quality   
-  *place your comments*
+  *unbelievable quality*
 * Design, UX   
-  *place your comments*
+  *Simple application, design with matterial-ui component, theme with our palette color, Buttons, IconButtons,TextField, Dialog windows*
 * Git and DevOps   
-  *place your comments*
+  *using one branch/issue, as few as possible commit directly on master, using To Do function on github to manage all issues, each one was regarding pull request of the other*
 
 Application development
 
 * Welcome screens   
-  *place your comments*
+  *Welcome (before and after login) screens are simple to use and to understand witch some buttons to navigate inside our application you can go back to the welcome after login screen at any time by clicking on the button "Ece Chat" located in the header*
 * New channel creation   
-  *place your comments*
+  *You are able to create a channel, choose his name, add participants*
 * Channel membership and access   
-  *place your comments*
-* Ressource access control   
-  *place your comments*
+  *Wou are able to rename the channel, delete it, add participants whenever you want IF you are the owner of the channel, otherwise you can only see who are the others participants, or leave the channel* 
+* Resource access control
+  *As we said only owner of a channel can modify or delete it*  
 * Invite users to channels   
-  *place your comments*
+  *When you create it, when you are the owner and you modify it*
 * Message modification   
-  *place your comments*
+  *You can modify all the messages you send by clicking on the button edit (pen icon)*
 * Message removal   
-  *place your comments*
+  *You can remove all the messages you send, this one will be delete from the database, any members of the channel won't be able to see it anymore, lost forever...*
 * Account settings   
-  *place your comments*
+  *we can manage your settings by clicking on the button from the welcome screen or by clicking on the gear icon (top right of the screen)*
 * Gravatar integration   
-  *place your comments*
-* Avatar selection   
-  *place your comments*
+  *You can choose your gravatar during sign in, or you can add it when you are in the account setting inside the application, if you have no gravatar it will import the default gravatar*
+* Avatar selection
+  *We offer you a selection of six beautiful avatars, selected with taste, the most complicated will be to choose*
 * Personal custom avatar   
-  *place your comments*
+  *If you want you want to upload a image from your computer you can, thanks to a drag and drop area. The maximum size is 30ko and ony images format are accepted, only downside we don't print an error if files are not accepted, if this is the case nothing append you have to choose an other image*
 
 ## Bonus
 
