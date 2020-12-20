@@ -24,6 +24,7 @@ import DropZone from './DropZone';
 import MenuItem from '@material-ui/core/MenuItem';
 import Switch from '@material-ui/core/Switch';
 import { FormControlLabel, FormGroup } from '@material-ui/core';
+import { useHistory } from "react-router-dom";
 
 const useStyles = (theme) => ({
   root: {
@@ -75,6 +76,7 @@ export default () => {
   const theme = useTheme()
   const styles = useStyles(theme)
   const { oauth, setOauth } = useContext(Context)
+  const history = useHistory()
   const [username, setUserName] = useState('')
   const [userMessage, setUserMessage] = useState('You can change your username here')
   const [imageMessage, setImageMessage] = useState("Choose a way to change your Avatar if you want and look at the result below!")
@@ -191,10 +193,35 @@ export default () => {
     setImageMessage('Wow... what a beautiful Avatar')
   }
 
+
+  const usernameValidity = async () => {
+    const regex = /[^A-Za-z0-9_-]/
+    if(regex.test(username)){ 
+      setUserMessage('invalid character in your username (only alphanumeric characters and hyphen)')
+      return false
+    }else{
+      try{
+      const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      if (email) {
+        setUserMessage('We are sorry but an other member already use this username')
+        return false
+    }
+    return true
+  }catch(err){
+    setUserMessage('Oops an error occur try again..')
+    return false
+  }
+  } 
+}
+
   const handleNewUsername = async () => {
     if (!username) {
       setUserMessage('Ohoh it looks like you forgot to enter your username')
-    } else {
+    } else if(await usernameValidity()) {
       try {
         const data = {
           name: username,
@@ -210,6 +237,7 @@ export default () => {
         oauth.user = user.data
         setOauth(oauth)
         setUserMessage('Username updated')
+        history.replace('/settings')
       } catch (err) {
         setUserMessage('Oops an error occur try again..')
       }
@@ -232,6 +260,7 @@ export default () => {
       oauth.settings = settings.data
       setOauth(oauth)
       setUserMessage('Settings updated')
+      history.replace('/settings')
     } catch (err) {
       setUserMessage('Oops an error occur try again..')
     }
@@ -256,6 +285,7 @@ export default () => {
         setImageMessage('Avatar updated!')
         oauth.user = user.data
         setOauth(oauth)
+        history.replace('/settings')
       } catch (err) {
         setImageMessage('Oops an error occur try again..')
       }

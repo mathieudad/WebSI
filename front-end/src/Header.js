@@ -36,16 +36,15 @@ const useStyles = (theme) => ({
   }
 })
 
-
-
 export default () => {
   const styles = useStyles(useTheme())
   const history = useHistory()
-  let avatar = null
   const {
     oauth, setOauth,
     drawerVisible, setDrawerVisible
   } = useContext(Context)
+  let avatar
+
   if (oauth && oauth.user) {
     const email64 = window.btoa(oauth.email)
     const url = `http://localhost:3001/users/${email64}`;
@@ -75,39 +74,34 @@ export default () => {
   const drawerToggle = (e) => {
     setDrawerVisible(!drawerVisible)
   }
+
   const onClickLogout = (e) => {
+    history.replace('./')
     e.stopPropagation()
     setOauth(null)
   }
 
   const handleMenu = () => {
-    history.push('./')
+    history.push('/')
   }
 
   const handleSettings = () => {
-    history.push('./settings')
+    history.replace('/settings')
   }
-
   const buttonLogoutProps = {
     variant: "contained",
     color: "secondary",
     onClick: onClickLogout
   }
-
-
-
   const buttonSettingsProps ={
     variant: "contained",
     color: "secondary",
     onClick: handleSettings
   }
-
   const buttonHomeProps ={
     color: "secondary",
     onClick: handleMenu
   }
-
-
 
   return (
     <header css={styles.header}>

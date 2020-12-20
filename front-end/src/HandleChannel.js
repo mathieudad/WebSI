@@ -17,15 +17,14 @@ import SentimentVeryDissatisfiedIcon from '@material-ui/icons/SentimentVeryDissa
 import Grid from '@material-ui/core/Grid';
 import SentimentVerySatisfiedIcon from '@material-ui/icons/SentimentVerySatisfied';
 
-
 const style = {
   TextField: {
     width: '90%'
   },
   TextMemberAdd: {
     marginLeft: '8px',
-    display:"flex",
-    alignItems:"center"
+    display: "flex",
+    alignItems: "center"
   }
 }
 
@@ -58,34 +57,30 @@ const Members = ({ members }) => {
   }
 }
 
-
 const DiagMessage = ({ diagMess }) => {
   return (<DialogContentText style={{ width: "85%" }}>{diagMess}</DialogContentText>)
 }
 
-export default ({ open, onClose, channel}) => {
-  const { oauth,  channels, setChannels} = useContext(Context)
+export default ({ open, onClose, channel }) => {
+  const { oauth, channels, setChannels } = useContext(Context)
   const [member, setMember] = useState('')
   const [members, setMembers] = useState([])
   const [userNameMembers, setUsernameMember] = useState([])
   const [nameChannel, setNameChannel] = useState('')
   const [diagMess, setDiagMess] = useState()
-  const owner = channel? ((channel.owner === oauth.user.id) ? true : false) : false
+  const owner = channel ? ((channel.owner === oauth.user.id) ? true : false) : false
   const [smiley, setSmiley] = useState(false)
-  console.log(channel)
-  console.log(nameChannel)
+
   const handleChangeMember = (event) => {
     setMember(event.target.value)
   }
 
   useEffect(() => {
-    setMembers(channel ? [...channel.members] :[])
-    setUsernameMember(channel ? [...channel.members]: [])
+    setMembers(channel ? [...channel.members] : [])
+    setUsernameMember(channel ? [...channel.members] : [])
     setNameChannel(channel ? channel.name : '')
     setDiagMess(channel ? ' If you are owner of this channel you are able to modify if' : 'Please enter the name of the channel and participants you want to chat with.')
   }, [channel])
-
-
 
   const handleChangeNameChannel = (event) => {
     setNameChannel(event.target.value)
@@ -130,31 +125,32 @@ export default ({ open, onClose, channel}) => {
       setSmiley(true)
       return
     }
-      try {
-        let channel = {
-          name: nameChannel,
-          members: members
-        }
-        const res = await axios.post('http://localhost:3001/channels', channel, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${oauth.access_token}`
-          }
-        })
-        setChannels([...channels, res.data])
-        onClose()
-        setDiagMess('Please enter the name of the channel and participants you want to chat with.')
-        setMembers([])
-        setUsernameMember([])
-        setMember('')
-        setSmiley(false)
-
-      } catch (err) {
-        setDiagMess('Oops an error occur please try again ')
-        setSmiley(true)
+    try {
+      let channel = {
+        name: nameChannel,
+        members: members
       }
-    
+      const res = await axios.post('http://localhost:3001/channels', channel, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      setChannels([...channels, res.data])
+      onClose()
+      setDiagMess('Please enter the name of the channel and participants you want to chat with.')
+      setMembers([])
+      setUsernameMember([])
+      setMember('')
+      setSmiley(false)
+
+    } catch (err) {
+      setDiagMess('Oops an error occur please try again ')
+      setSmiley(true)
+    }
+
   }
+
   const Smiley = () => {
     if (smiley)
       return <>
@@ -164,7 +160,7 @@ export default ({ open, onClose, channel}) => {
       return <> <SentimentVerySatisfiedIcon fontSize="large" /></>
   }
 
-  const handleDeleteChannel = async () =>{
+  const handleDeleteChannel = async () => {
     try {
       await axios.delete(`http://localhost:3001/channels/${channel.id}`, {
         headers: {
@@ -188,7 +184,7 @@ export default ({ open, onClose, channel}) => {
     }
   }
 
-  const handleLeaveChannel = async () =>{
+  const handleLeaveChannel = async () => {
     try {
 
       await axios.delete(`http://localhost:3001/channels/${channel.id}/${oauth.user.id}`, {
@@ -230,48 +226,48 @@ export default ({ open, onClose, channel}) => {
           </Grid>
           <TextField
             autoFocus
-            required = {channel? false: true}
-            disabled = {channel? (owner ? false : true ) : false} 
+            required={channel ? false : true}
+            disabled={channel ? (owner ? false : true) : false}
             variant="outlined"
             color="primary"
             id="name"
             label="name of your channel"
-            defaultValue = {channel? nameChannel : null }
+            defaultValue={channel ? nameChannel : null}
             margin="normal"
             fullWidth
             onChange={handleChangeNameChannel}
           />
           <Members members={userNameMembers} />
           <div>
-          <Grid
+            <Grid
               container
               direction="row"
               justify="space-between"
               alignItems="center">
 
-            <TextField
-              disabled = {channel? (owner ? false : true ) : false} 
-              style={style.TextField}
-              variant="outlined"
-              id="name"
-              label="member"
-              margin="normal"
-              value={member}
-              onChange={handleChangeMember}
-            />
-            <ResponsiveIconButton props={buttonAddProps} icon={<AddCircleOutlineIcon />}
-            />
+              <TextField
+                disabled={channel ? (owner ? false : true) : false}
+                style={style.TextField}
+                variant="outlined"
+                id="name"
+                label="member"
+                margin="normal"
+                value={member}
+                onChange={handleChangeMember}
+              />
+              <ResponsiveIconButton props={buttonAddProps} icon={<AddCircleOutlineIcon />}
+              />
             </Grid>
           </div>
         </DialogContent>
         <DialogActions>
-          {channel ? (owner ? <Button onClick={handleDeleteChannel}>Delete the channel</Button> : <Button onClick={handleLeaveChannel}>Leave the channel</Button> ): null }
+          {channel ? (owner ? <Button onClick={handleDeleteChannel}>Delete the channel</Button> : <Button onClick={handleLeaveChannel}>Leave the channel</Button>) : null}
           <Button onClick={handleCancelDialog} >
             Cancel
         </Button>
           <Button onClick={handleAddChannel}>
             {channel ? 'Modify the channel' : 'Create Channel'}
-        </Button>
+          </Button>
         </DialogActions>
       </Dialog>
     </div>

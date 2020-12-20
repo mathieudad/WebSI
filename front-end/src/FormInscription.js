@@ -33,7 +33,6 @@ const useStyles = (theme) => ({
 })
 
 const Image = ({ image, theme }) => {
-  //console.log(showImage(image))
   const style = ({
     width: '70px',
     heigh: '70px',
@@ -46,6 +45,7 @@ const Image = ({ image, theme }) => {
   return <img alt="Welcome" src={image} css={style} />
 }
 
+
 //TODO : verifier la validité de l'username
 export default () => {
   const history = useHistory()
@@ -53,7 +53,7 @@ export default () => {
   const styles = useStyles(theme)
   const { oauth, setOauth } = useContext(Context)
   const [username, setUserName] = useState('')
-  const [message, setMessage] = useState('please enter the username you want to use (you can change it later)')
+  const [userMessage, setUserMessage] = useState('please enter the username you want to use (you can change it later)')
   const [image, setImage] = useState(Photo)
   const [imageMessage, setImageMessage] = useState("Choose a way to add you an Avatar and look at the result below!")
   const [openAvatar, setOpenAvatar] = useState(false)
@@ -64,16 +64,39 @@ export default () => {
     setUserName(event.target.value)
   }
 
+  const usernameValidity = async () => {
+    const regex = /[^A-Za-z0-9_-]/
+    if(regex.test(username)){ 
+      setUserMessage('invalid character in your username (only alphanumeric characters and hyphen)')
+      return false
+    }else{
+      try{
+      const { data: email } = await axios.get(`http://localhost:3001/users/byname/${username}`, {
+        headers: {
+          'Authorization': `Bearer ${oauth.access_token}`
+        }
+      })
+      if (email) {
+        setUserMessage('We are sorry but an other member already use this username')
+        return false
+    }
+    return true
+  }catch (err) {
+    setUserMessage('Oops an error occur try again..')
+    return false
+  }
+  }
+}
 
   const handleNewUser = async () => {
     if (!username || Object.is(image, Photo)) {
       if (!username) {
-        setMessage('Ohoh it looks like you forgot to enter your username')
+        setUserMessage('Ohoh it looks like you forgot to enter your username')
       }
       if (Object.is(image, Photo)) {
         setImageMessage('Ohoh it looks like you forgot to choose your avatar')
       }
-    } else {
+    } else if(await usernameValidity()) {
       try {
         const data = {
           name: username,
@@ -96,7 +119,7 @@ export default () => {
         setOauth(oauth)
         history.push('/')
       } catch (err) {
-        setMessage('Oops an error occur try again..')
+        setUserMessage('Oops an error occur try again..')
       }
     }
   }
@@ -195,7 +218,7 @@ export default () => {
         alignItems="center"
       >
         <Typography color="textPrimary" variant="h5">
-          {message}
+          {userMessage}
         </Typography>
         <div css={{ marginBottom: '20px' }}>
           <TextField

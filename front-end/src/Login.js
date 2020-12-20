@@ -7,6 +7,7 @@ import axios from 'axios';
 import { jsx } from '@emotion/core'
 // Layout
 import { useTheme } from '@material-ui/core/styles';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
 import Link from '@material-ui/core/Link'
 // Local
 import Context from './Context'
@@ -16,7 +17,7 @@ import {
 } from "react-router-dom";
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import { ReactComponent as DiscussionIcon } from './icons/discussion.svg';
-import { Grid } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 
 const base64URLEncode = (str) => {
   return str.toString('base64')
@@ -95,6 +96,8 @@ const Redirect = ({
   return (
 
     <div css={styles.root}>
+      <Typography color="primary" variant="h4">Welcome to Ece Chat sign you to see more</Typography>
+
       <DiscussionIcon css={styles.icon} />
 
       <ResponsiveButton name='Login with OpenID Connect and OAuth2' props={propsLoginButton} icon={<LockOpenIcon />} />
@@ -198,7 +201,7 @@ export default () => {
       fetch()
     })
     return (
-      <div css={styles.root}>Loading tokens</div>
+      <div css={styles.root}>Loading ... <HourglassEmptyIcon/></div>
     )
   }
 }
