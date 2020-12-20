@@ -163,9 +163,12 @@ module.exports = {
     deleteChannel: async (id, channelId) => {
       if (!id) throw Error('Invalid id')
       if (!channelId) throw Error('Invalid channel id')
-      //const data = await db.get(`userchannels:${id}`)
-      //const userChannels = JSON.parse(data)
-      //return userChannels
+      const data = await db.get(`userchannels:${id}`)
+      console.log(channelId)
+      const userChannels = JSON.parse(data)
+      const newUserChannels = userChannels.filter(channel => `channels:${channelId}` != channel)
+      db.put(`userchannels:${id}`, JSON.stringify(newUserChannels))
+      return newUserChannels
     },
     list: async () => {
       return new Promise((resolve, reject) => {

@@ -42,12 +42,14 @@ app.get('/channels/:id', async (req, res) => {
 })
 
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.body)
+  const channel = await db.channels.update(req.params.id, req.body)
   res.json(channel)
 })
 
 app.delete('/channels/:id', async (req, res) => {
   const channel = await db.channels.delete(req.params.id)
+  const idUser =  Buffer.from(req.user.email, 'utf-8').toString('base64')
+  await db.users.deleteChannel(idUser, req.params.id)
   res.json(channel)
 })
 
@@ -86,7 +88,8 @@ app.get('/users', async (req, res) => {
 })
 
 app.post('/users', async (req, res) => {
-  const user = await db.users.create(req.body, req.user.email)
+  const id =  Buffer.from(req.user.email, 'utf-8').toString('base64')
+  const user = await db.users.create(req.body, id)
   await db.settings.put(user.id, {mode: true, language: 'EN'})
   res.status(201).json(user)
 })
