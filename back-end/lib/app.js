@@ -22,15 +22,14 @@ app.get('/', (req, res) => {
 // Channels
 
 app.get('/channels', async (req, res) => {
-  const userId =  Buffer.from(req.user.email, 'utf-8').toString('base64')
-  const userChannels = await db.users.listChannels(userId)
-  res.json(userChannels)
+  const channels = await db.channels.list()
+  res.json(channels)
 })
 
 app.post('/channels', async (req, res) => {
   const idOwner =  Buffer.from(req.user.email, 'utf-8').toString('base64')
   const channel = await db.channels.create(req.body, idOwner)
-  await db.users.addChannel(idOwner, channel.id)
+  await db.users.addChannel(idOwner, channel.id, true)
   await Promise.all(channel.members.map((member) => {
     return db.users.addChannel(member, channel.id)
   }))
@@ -43,7 +42,7 @@ app.get('/channels/:id', async (req, res) => {
 })
 
 app.put('/channels/:id', async (req, res) => {
-  const channel = await db.channels.update(req.params.id, req.body)
+  const channel = await db.channels.update(req.body)
   res.json(channel)
 })
 
@@ -87,8 +86,7 @@ app.get('/users', async (req, res) => {
 })
 
 app.post('/users', async (req, res) => {
-  const id =  Buffer.from(req.user.email, 'utf-8').toString('base64')
-  const user = await db.users.create(req.body, id)
+  const user = await db.users.create(req.body, req.user.email)
   await db.settings.put(user.id, {mode: true, language: 'EN'})
   res.status(201).json(user)
 })
@@ -114,13 +112,6 @@ app.get('/users/:id/channels', async (req, res) => {
   const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
   if(email != req.user.email) throw Error('Unauthorized')
   const userChannels = await db.users.listChannels(req.params.id)
-  res.json(userChannels)
-})
-
-app.delete('/users/:id/channels/:idChannel', async (req, res) => {
-  const email =  Buffer.from(req.params.id, 'base64').toString('utf-8')
-  if(email != req.user.email) throw Error('Unauthorized')
-  const userChannels = await db.users.deleteChannel(req.params.id, req.params.idChannel)
   res.json(userChannels)
 })
 
@@ -151,8 +142,21 @@ app.put('/users/:id/settings', async (req, res) => {
   res.status(201).json(settings)
 })
 
-app.post('/test/users', async (req, res) => {
-   const users = await Promise.all(req.body.map(async (mockedUser) => {
+app.get('/test/users', async (req, res) => {
+  const mockedUsers = [
+    {
+      "user": {
+        "name": "Thauvin"
+      },
+      "email": "dGhhdXZpbkBnbWFpbC5jb20="
+    },{
+      "user": {
+        "name": "Payet"
+      },
+      "email": "cGF5ZXRAZ21haWwuY29t"
+    }
+  ]
+   const users = await Promise.all(mockedUsers.map(async (mockedUser) => {
     return new Promise(async (resolve, reject) => {
       try{
         const user = await db.users.create(mockedUser.user, mockedUser.email)
